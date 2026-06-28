@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FCC — DCLI Dashboard: Cultura & Liderazgo Digital</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg:        #f0f4f9;
+    --surface:   #ffffff;
+    --surface2:  #e8eef7;
+    --surface3:  #dce6f4;
+    --border:    #c8d8ee;
+    --border2:   #b0c6e4;
+
+    /* Blue scale */
+    --blue-900:  #0d2b5e;
+    --blue-800:  #1a3a7a;
+    --blue-700:  #1e4d9e;
+    --blue-600:  #2563c8;
+    --blue-500:  #3b7de8;
+    --blue-400:  #5b9af4;
+    --blue-300:  #93bff8;
+    --blue-200:  #bdd6fb;
+    --blue-100:  #dceafd;
+    --blue-50:   #eef4ff;
+
+    --text:       #0d2b5e;
+    --text-mid:   #2e4d7a;
+    --text-muted: #5a7299;
+    --text-light: #8aaac8;
+
+    /* Semaphore — ONLY for risk */
+    --risk-red:    #dc2626;
+    --risk-red-bg: #fef2f2;
+    --risk-red-bd: #fca5a5;
+    --risk-yel:    #d97706;
+    --risk-yel-bg: #fffbeb;
+    --risk-yel-bd: #fcd34d;
+    --risk-grn:    #16a34a;
+    --risk-grn-bg: #f0fdf4;
+    --risk-grn-bd: #86efac;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-size: 14px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--blue-900) 0%, var(--blue-700) 60%, var(--blue-600) 100%);
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(13,43,94,.18);
+  }
+  .header-left h1 {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .header-left p { color: var(--blue-200); font-size: 0.8rem; margin-top: 3px; }
+  .header-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .badge {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    border: 1px solid rgba(255,255,255,.25);
+  }
+  .badge-accent {
+    background: var(--blue-500);
+    color: #fff;
+    font-size: 0.72rem;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+
+  /* ── NAV ── */
+  .nav {
+    background: var(--surface);
+    display: flex;
+    gap: 0;
+    padding: 0 28px;
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+    box-shadow: 0 1px 4px rgba(13,43,94,.06);
+  }
+  .nav-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    padding: 13px 20px;
+    font-size: 0.83rem;
+    font-weight: 500;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    transition: all 0.18s;
+  }
+  .nav-btn:hover { color: var(--blue-600); background: var(--blue-50); }
+  .nav-btn.active { color: var(--blue-700); border-bottom-color: var(--blue-600); font-weight: 600; }
+
+  /* ── MAIN ── */
+  .main { padding: 24px 32px; max-width: 1400px; margin: 0 auto; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── KPI CARDS ── */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(13,43,94,.07);
+    transition: box-shadow 0.18s, transform 0.18s;
+  }
+  .kpi-card:hover { box-shadow: 0 4px 14px rgba(37,99,200,.12); transform: translateY(-2px); }
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+    background: var(--blue-500);
+  }
+  .kpi-card.b7::before  { background: var(--blue-700); }
+  .kpi-card.b5::before  { background: var(--blue-500); }
+  .kpi-card.b3::before  { background: var(--blue-300); }
+  .kpi-label {
+    font-size: 0.68rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 7px;
+    font-weight: 600;
+  }
+  .kpi-value { font-size: 1.75rem; font-weight: 700; color: var(--blue-800); line-height: 1; }
+  .kpi-meta  { font-size: 0.7rem; color: var(--text-light); margin-top: 3px; }
+  .kpi-trend { font-size: 0.72rem; margin-top: 6px; color: var(--blue-600); }
+  .kpi-trend.up::before   { content: '▲ '; }
+  .kpi-trend.down::before { content: '▼ '; color: var(--blue-400); }
+
+  /* Semaphore chips — only for risk */
+  .risk-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 20px;
+    margin-top: 7px;
+    border: 1px solid;
+  }
+  .risk-chip .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .risk-chip.green  { background: var(--risk-grn-bg); color: var(--risk-grn);  border-color: var(--risk-grn-bd); }
+  .risk-chip.green  .dot { background: var(--risk-grn); }
+  .risk-chip.yellow { background: var(--risk-yel-bg); color: var(--risk-yel); border-color: var(--risk-yel-bd); }
+  .risk-chip.yellow .dot { background: var(--risk-yel); }
+  .risk-chip.red    { background: var(--risk-red-bg); color: var(--risk-red);  border-color: var(--risk-red-bd); }
+  .risk-chip.red    .dot { background: var(--risk-red); }
+
+  /* ── CHARTS ── */
+  .charts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .chart-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 22px;
+    box-shadow: 0 1px 4px rgba(13,43,94,.06);
+  }
+  .chart-card.full { grid-column: 1 / -1; }
+  .chart-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--blue-800);
+    margin-bottom: 3px;
+  }
+  .chart-subtitle {
+    font-size: 0.73rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+  .chart-wrap { position: relative; }
+
+  /* ── SECTION HEADERS ── */
+  .section-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--blue-700);
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--blue-100);
+  }
+
+  /* ── FILTERS ── */
+  .filter-group { display: flex; align-items: center; gap: 8px; }
+  .filter-group label { font-size: 0.78rem; color: var(--text-muted); font-weight: 500; }
+  .filter-group select {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--text);
+    padding: 6px 10px;
+    border-radius: 7px;
+    font-size: 0.81rem;
+    cursor: pointer;
+    outline: none;
+  }
+  .filter-group select:focus { border-color: var(--blue-500); box-shadow: 0 0 0 3px var(--blue-100); }
+
+  /* ── OKR TABLES ── */
+  .okr-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 18px;
+    box-shadow: 0 1px 4px rgba(13,43,94,.06);
+  }
+  .okr-block-header {
+    background: linear-gradient(90deg, var(--blue-700), var(--blue-600));
+    color: #fff;
+    padding: 10px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 0.81rem; }
+  th {
+    background: var(--blue-50);
+    color: var(--text-mid);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 9px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--surface2);
+    color: var(--text-mid);
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--blue-50); }
+  td strong { color: var(--blue-800); }
+
+  /* ── PROGRESS ── */
+  .progress-wrap { display: flex; align-items: center; gap: 8px; }
+  .progress-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.7s ease;
+  }
+  .fill-grn { background: var(--risk-grn); }
+  .fill-yel { background: var(--risk-yel); }
+  .fill-red { background: var(--risk-red); }
+  .progress-pct { font-size: 0.73rem; color: var(--text-muted); min-width: 30px; text-align: right; }
+
+  /* ── PREDICTION ── */
+  .pred-controls {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .toggle-btn {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .toggle-btn:hover { border-color: var(--blue-500); color: var(--blue-600); }
+  .toggle-btn.active { background: var(--blue-700); border-color: var(--blue-700); color: #fff; font-weight: 600; }
+
+  .pred-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .pred-metric {
+    background: var(--blue-50);
+    border: 1px solid var(--blue-200);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: center;
+  }
+  .pred-metric .quarter { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 5px; }
+  .pred-metric .value   { font-size: 1.5rem; font-weight: 700; color: var(--blue-700); }
+  .pred-metric .ci      { font-size: 0.68rem; color: var(--text-light); margin-top: 2px; }
+  .pred-metric .dcli    { font-size: 0.71rem; color: var(--blue-500); margin-top: 5px; font-weight: 600; }
+
+  /* Info box */
+  .info-box {
+    background: var(--blue-50);
+    border: 1px solid var(--blue-200);
+    border-left: 4px solid var(--blue-500);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+  }
+  .info-box strong { color: var(--blue-700); }
+
+  /* Semaphore legend */
+  .sem-legend {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    font-size: 0.77rem;
+    padding: 12px 16px;
+    background: var(--surface2);
+    border-radius: 8px;
+    margin-top: 16px;
+    color: var(--text-muted);
+  }
+  .sem-item { display: flex; align-items: center; gap: 6px; }
+  .sem-dot  { width: 9px; height: 9px; border-radius: 50%; }
+
+  /* Segmentation grid */
+  .seg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+    gap: 16px;
+  }
+
+  @media (max-width: 720px) {
+    .header { padding: 16px 18px; }
+    .main { padding: 14px 16px; }
+    .nav { padding: 0 12px; }
+    .charts-grid, .seg-grid { grid-template-columns: 1fr; }
+    .kpi-grid { grid-template-columns: repeat(2,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <h1>FCC · DCLI Dashboard</h1>
+    <p>Digital Culture &amp; Leadership Index — Monitoreo OKRs + Predicción LCS</p>
+  </div>
+  <div class="header-right">
+    <span class="badge">605 registros</span>
+    <span class="badge">11 trimestres</span>
+    <span class="badge-accent">2013-Q3 → 2016-Q1</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nav-btn active" onclick="showTab('overview',this)">Resumen ejecutivo</button>
+  <button class="nav-btn" onclick="showTab('kpis',this)">KPIs por trimestre</button>
+  <button class="nav-btn" onclick="showTab('okrs',this)">OKRs &amp; Semáforos</button>
+  <button class="nav-btn" onclick="showTab('segmentation',this)">Segmentación</button>
+  <button class="nav-btn" onclick="showTab('prediction',this)">Predicción LCS</button>
+</nav>
+
+<div class="main">
+
+<!-- ══════════════════════ OVERVIEW ══════════════════════ -->
+<div id="tab-overview" class="tab-content active">
+
+  <div class="kpi-grid">
+    <div class="kpi-card b7">
+      <div class="kpi-label">DCLI 2016-Q1</div>
+      <div class="kpi-value" style="color:var(--blue-800)">60.0</div>
+      <div class="kpi-meta">/ 100 · Meta: 75</div>
+      <div class="kpi-trend up">+47.9 desde inicio</div>
+      <div class="risk-chip yellow"><div class="dot"></div>Riesgo medio</div>
+    </div>
+    <div class="kpi-card b7">
+      <div class="kpi-label">DAI 2016-Q1</div>
+      <div class="kpi-value" style="color:var(--blue-700)">60.4</div>
+      <div class="kpi-meta">/ 100 · Meta: 75</div>
+      <div class="kpi-trend up">+49.6 desde inicio</div>
+      <div class="risk-chip yellow"><div class="dot"></div>Riesgo medio</div>
+    </div>
+    <div class="kpi-card b5">
+      <div class="kpi-label">Leadership Confidence</div>
+      <div class="kpi-value">7.66</div>
+      <div class="kpi-meta">/ 10 · Meta: ≥ 8.2</div>
+      <div class="kpi-trend up">+5.34 desde 2013-Q3</div>
+      <div class="risk-chip yellow"><div class="dot"></div>93% a meta</div>
+    </div>
+    <div class="kpi-card b5">
+      <div class="kpi-label">Employee Engagement</div>
+      <div class="kpi-value">6.95</div>
+      <div class="kpi-meta">/ 10 · Meta: ≥ 8.0</div>
+      <div class="kpi-trend up">+4.50 desde inicio</div>
+      <div class="risk-chip yellow"><div class="dot"></div>87% a meta</div>
+    </div>
+    <div class="kpi-card b5">
+      <div class="kpi-label">Cultural Sentiment</div>
+      <div class="kpi-value">8.21</div>
+      <div class="kpi-meta">/ 10 · Meta: ≥ 8.5</div>
+      <div class="kpi-trend up">+6.38 desde inicio</div>
+      <div class="risk-chip green"><div class="dot"></div>97% a meta</div>
+    </div>
+    <div class="kpi-card b5">
+      <div class="kpi-label">Change Readiness</div>
+      <div class="kpi-value">6.36</div>
+      <div class="kpi-meta">/ 10 · Meta: ≥ 7.2</div>
+      <div class="kpi-trend up">+4.12 desde inicio</div>
+      <div class="risk-chip yellow"><div class="dot"></div>88% a meta</div>
+    </div>
+    <div class="kpi-card b3">
+      <div class="kpi-label">Change Resistance</div>
+      <div class="kpi-value">4.59</div>
+      <div class="kpi-meta">/ 10 · Meta: ≤ 3.8</div>
+      <div class="kpi-trend down">−4.24 (mejora)</div>
+      <div class="risk-chip yellow"><div class="dot"></div>Reducción en curso</div>
+    </div>
+    <div class="kpi-card b3">
+      <div class="kpi-label">Tool Adoption</div>
+      <div class="kpi-value">6.79</div>
+      <div class="kpi-meta">/ 10 · Meta: ≥ 8.0</div>
+      <div class="kpi-trend up">+4.51 desde inicio</div>
+      <div class="risk-chip yellow"><div class="dot"></div>85% a meta</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card full">
+      <div class="chart-title">Evolución del DCLI y DAI — 2013 al 2016</div>
+      <div class="chart-subtitle">Índices de cultura digital (0–100) · Línea punteada = meta 75</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="chart-dcli-dai"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">KPIs de Liderazgo y Cultura</div>
+      <div class="chart-subtitle">Evolución trimestral (escala 0–10)</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="chart-leadership"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Tensión cultural: Resistencia vs. Preparación</div>
+      <div class="chart-subtitle">Convergencia de ambas métricas indica reducción de riesgo</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="chart-resistance"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ KPIs ══════════════════════ -->
+<div id="tab-kpis" class="tab-content">
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
+    <div class="filter-group">
+      <label>KPI:</label>
+      <select id="kpi-select" onchange="updateKpiChart()">
+        <option value="leadership_confidence_score">Leadership Confidence Score</option>
+        <option value="employee_engagement_score">Employee Engagement Score</option>
+        <option value="change_readiness_index">Change Readiness Index</option>
+        <option value="cultural_sentiment_score">Cultural Sentiment Score</option>
+        <option value="change_resistance_index">Change Resistance Index</option>
+        <option value="digital_tool_adoption_score">Digital Tool Adoption Score</option>
+        <option value="collaboration_cross_bureau_index">Collaboration Cross-Bureau</option>
+        <option value="communication_effectiveness_score">Communication Effectiveness</option>
+        <option value="transparency_perception_score">Transparency Perception Score</option>
+        <option value="security_posture_score">Security Posture Score</option>
+        <option value="digital_training_hours_quarter">Digital Training Hours</option>
+        <option value="feedback_frequency_score">Feedback Frequency Score</option>
+        <option value="telework_adoption_score">Telework Adoption Score</option>
+        <option value="innovation_ideas_submitted">Innovation Ideas Submitted</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card full">
+      <div class="chart-title" id="kpi-chart-title">Leadership Confidence Score — Evolución trimestral</div>
+      <div class="chart-subtitle">Promedio por trimestre · 55 empleados por período</div>
+      <div class="chart-wrap" style="height:280px"><canvas id="chart-kpi-main"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Perfil de KPIs: inicio vs. cierre</div>
+      <div class="chart-subtitle">Radar comparativo 2013-Q3 → 2016-Q1</div>
+      <div class="chart-wrap" style="height:270px"><canvas id="chart-radar"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Adopción digital y formación</div>
+      <div class="chart-subtitle">Horas de capacitación · adopción de herramientas · teletrabajo</div>
+      <div class="chart-wrap" style="height:270px"><canvas id="chart-adoption"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ OKRs ══════════════════════ -->
+<div id="tab-okrs" class="tab-content">
+
+  <div class="okr-block">
+    <div class="okr-block-header">Objetivo 1 · Consolidar un liderazgo digital confiable, visible y alineado</div>
+    <table>
+      <thead><tr><th>KR</th><th>KPI</th><th>Línea base</th><th>Actual (2016-Q1)</th><th>Meta</th><th>Avance</th><th>Riesgo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>KR1</td><td>leadership_confidence_score</td><td>2.32</td><td><strong>7.66</strong></td><td>≥ 8.2</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:89%"></div></div><span class="progress-pct">89%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR2</td><td>transparency_perception_score</td><td>2.97</td><td><strong>7.25</strong></td><td>≥ 8.0</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:85%"></div></div><span class="progress-pct">85%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR3</td><td>communication_effectiveness_score</td><td>2.77</td><td><strong>6.51</strong></td><td>≥ 7.5</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:80%"></div></div><span class="progress-pct">80%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR4</td><td>blog_engagement_score</td><td>1.88</td><td><strong>6.27</strong></td><td>≥ 7.2</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:82%"></div></div><span class="progress-pct">82%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="okr-block">
+    <div class="okr-block-header">Objetivo 2 · Reducir resistencia y elevar preparación al cambio</div>
+    <table>
+      <thead><tr><th>KR</th><th>KPI</th><th>Línea base</th><th>Actual</th><th>Meta</th><th>Avance</th><th>Riesgo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>KR1</td><td>change_readiness_index</td><td>2.23</td><td><strong>6.36</strong></td><td>≥ 7.2</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:84%"></div></div><span class="progress-pct">84%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR2</td><td>change_resistance_index (↓)</td><td>8.83</td><td><strong>4.59</strong></td><td>≤ 3.8</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:83%"></div></div><span class="progress-pct">83%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR3</td><td>innovation_ideas_submitted</td><td>0.07</td><td><strong>1.07</strong></td><td>≥ 1.5</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-red" style="width:71%"></div></div><span class="progress-pct">71%</span></div></td>
+          <td><span class="risk-chip red"><div class="dot"></div>Alto</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="okr-block">
+    <div class="okr-block-header">Objetivo 3 · Escalar adopción digital y nuevas formas de trabajo</div>
+    <table>
+      <thead><tr><th>KR</th><th>KPI</th><th>Línea base</th><th>Actual</th><th>Meta</th><th>Avance</th><th>Riesgo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>KR1</td><td>digital_tool_adoption_score</td><td>2.28</td><td><strong>6.79</strong></td><td>≥ 8.0</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:85%"></div></div><span class="progress-pct">85%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR2</td><td>telework_adoption_score</td><td>2.06</td><td><strong>6.82</strong></td><td>≥ 7.5</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-grn" style="width:91%"></div></div><span class="progress-pct">91%</span></div></td>
+          <td><span class="risk-chip green"><div class="dot"></div>Bajo</span></td>
+        </tr>
+        <tr>
+          <td>KR3</td><td>digital_training_hours_quarter</td><td>0.33</td><td><strong>5.60</strong></td><td>≥ 6.0</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-grn" style="width:93%"></div></div><span class="progress-pct">93%</span></div></td>
+          <td><span class="risk-chip green"><div class="dot"></div>Bajo</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="okr-block">
+    <div class="okr-block-header">Objetivo 4 · Fortalecer comunicación, colaboración y redes de cambio</div>
+    <table>
+      <thead><tr><th>KR</th><th>KPI</th><th>Línea base</th><th>Actual</th><th>Meta</th><th>Avance</th><th>Riesgo</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>KR1</td><td>collaboration_cross_bureau_index</td><td>2.67</td><td><strong>6.54</strong></td><td>≥ 7.5</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:82%"></div></div><span class="progress-pct">82%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR2</td><td>feedback_frequency_score</td><td>2.24</td><td><strong>6.31</strong></td><td>≥ 7.0</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-yel" style="width:88%"></div></div><span class="progress-pct">88%</span></div></td>
+          <td><span class="risk-chip yellow"><div class="dot"></div>Medio</span></td>
+        </tr>
+        <tr>
+          <td>KR3</td><td>cultural_sentiment_score</td><td>1.83</td><td><strong>8.21</strong></td><td>≥ 8.5</td>
+          <td><div class="progress-wrap"><div class="progress-bar"><div class="progress-fill fill-grn" style="width:97%"></div></div><span class="progress-pct">97%</span></div></td>
+          <td><span class="risk-chip green"><div class="dot"></div>Bajo</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="sem-legend">
+    <div class="sem-item"><div class="sem-dot" style="background:var(--risk-grn)"></div><strong style="color:var(--risk-grn)">Bajo riesgo</strong> — avance ≥ 90% de meta</div>
+    <div class="sem-item"><div class="sem-dot" style="background:var(--risk-yel)"></div><strong style="color:var(--risk-yel)">Riesgo medio</strong> — avance 70–89% de meta</div>
+    <div class="sem-item"><div class="sem-dot" style="background:var(--risk-red)"></div><strong style="color:var(--risk-red)">Alto riesgo</strong> — avance &lt; 70% de meta</div>
+    <span style="margin-left:auto;font-size:0.72rem;">Período base: 2013-Q3 · Corte: 2016-Q1</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ SEGMENTACIÓN ══════════════════════ -->
+<div id="tab-segmentation" class="tab-content">
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px;align-items:center;">
+    <div class="filter-group">
+      <label>KPI:</label>
+      <select id="seg-kpi" onchange="updateSegCharts()">
+        <option value="leadership_confidence_score">Leadership Confidence Score</option>
+        <option value="employee_engagement_score">Employee Engagement Score</option>
+        <option value="change_readiness_index">Change Readiness Index</option>
+        <option value="cultural_sentiment_score">Cultural Sentiment Score</option>
+        <option value="digital_tool_adoption_score">Digital Tool Adoption Score</option>
+      </select>
+    </div>
+    <div class="info-box" style="margin-bottom:0;flex:1;min-width:260px">
+      Barras coloreadas según nivel de riesgo relativo: <span style="color:var(--risk-grn);font-weight:700">verde</span> = desempeño alto, <span style="color:var(--risk-yel);font-weight:700">amarillo</span> = medio, <span style="color:var(--risk-red);font-weight:700">rojo</span> = bajo o rezagado.
+    </div>
+  </div>
+  <div class="seg-grid">
+    <div class="chart-card">
+      <div class="chart-title">Desempeño por Bureau / Oficina</div>
+      <div class="chart-subtitle">Promedio histórico — color indica nivel de riesgo</div>
+      <div class="chart-wrap" style="height:400px"><canvas id="chart-bureau"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Por Rol y Fase de Migración Cloud</div>
+      <div class="chart-subtitle">Izq: categoría de empleado · Der: fase cloud (inventory → optimization)</div>
+      <div class="chart-wrap" style="height:400px"><canvas id="chart-role-migration"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════ PREDICCIÓN ══════════════════════ -->
+<div id="tab-prediction" class="tab-content">
+  <div class="info-box">
+    <strong>Modelo predictivo:</strong> Regresión polinomial grado 2 ajustada sobre 11 trimestres históricos (R²&nbsp;=&nbsp;0.982).
+    El LCS es el leading indicator con mayor correlación al DCLI del período siguiente (r&nbsp;=&nbsp;0.804, R²&nbsp;=&nbsp;0.646).
+    Los intervalos de confianza representan ±1 desviación estándar de los residuales (σ&nbsp;=&nbsp;0.22).<br><br>
+    <strong>Proyección DCLI:</strong> calculada con la fórmula del documento — DCLI siguiente trimestre ≈ 5.10 + 6.55 × LCS actual.
+  </div>
+
+  <div class="pred-controls">
+    <span style="font-size:0.8rem;color:var(--text-muted);font-weight:600">Modelo:</span>
+    <button class="toggle-btn active" id="btn-poly"   onclick="setPredModel('poly')">Polinomial — R²=0.982</button>
+    <button class="toggle-btn"        id="btn-linear" onclick="setPredModel('linear')">Lineal — R²=0.926</button>
+    <label style="display:flex;align-items:center;gap:6px;margin-left:auto;font-size:0.78rem;color:var(--text-muted);cursor:pointer;">
+      <input type="checkbox" id="show-ci" checked onchange="updatePredChart()"> Mostrar intervalo de confianza
+    </label>
+  </div>
+
+  <div class="pred-metrics" id="pred-metrics"></div>
+
+  <div class="chart-card" style="margin-bottom:18px">
+    <div class="chart-title">Leadership Confidence Score — Histórico + Proyección 4 trimestres</div>
+    <div class="chart-subtitle">Área sombreada = intervalo de confianza · Triángulos = valores proyectados · Línea = meta OKR (8.2)</div>
+    <div class="chart-wrap" style="height:320px"><canvas id="chart-prediction"></canvas></div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <div class="chart-title">Proyección implícita del DCLI</div>
+      <div class="chart-subtitle">DCLI ≈ 5.10 + 6.55 × LCS · Meta DCLI = 75</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="chart-dcli-pred"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Ranking de predictores del DCLI</div>
+      <div class="chart-subtitle">Correlación de cada KPI con el DCLI del trimestre siguiente</div>
+      <div class="chart-wrap" style="height:250px"><canvas id="chart-ranking"></canvas></div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ═══════════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════════
+const quarters = ['2013-Q3','2013-Q4','2014-Q1','2014-Q2','2014-Q3','2014-Q4','2015-Q1','2015-Q2','2015-Q3','2015-Q4','2016-Q1'];
+const futureQ  = ['2016-Q2','2016-Q3','2016-Q4','2017-Q1'];
+const allQ     = [...quarters, ...futureQ];
+
+const quarterlyData = [
+  {quarter:'2013-Q3',employee_engagement_score:2.454,leadership_confidence_score:2.318,change_readiness_index:2.234,cultural_sentiment_score:1.83,change_resistance_index:8.826,digital_training_hours_quarter:0.327,digital_tool_adoption_score:2.277,collaboration_cross_bureau_index:2.668,communication_effectiveness_score:2.772,transparency_perception_score:2.971,security_posture_score:2.911,innovation_ideas_submitted:0.073,feedback_frequency_score:2.241,telework_adoption_score:2.057,security_incidents_quarter:2.0},
+  {quarter:'2013-Q4',employee_engagement_score:2.963,leadership_confidence_score:3.108,change_readiness_index:2.703,cultural_sentiment_score:2.042,change_resistance_index:8.24,digital_training_hours_quarter:0.4,digital_tool_adoption_score:2.62,collaboration_cross_bureau_index:2.915,communication_effectiveness_score:3.237,transparency_perception_score:3.579,security_posture_score:3.187,innovation_ideas_submitted:0.073,feedback_frequency_score:2.47,telework_adoption_score:2.124,security_incidents_quarter:3.0},
+  {quarter:'2014-Q1',employee_engagement_score:3.339,leadership_confidence_score:4.326,change_readiness_index:3.056,cultural_sentiment_score:3.98,change_resistance_index:7.933,digital_training_hours_quarter:1.945,digital_tool_adoption_score:3.352,collaboration_cross_bureau_index:3.292,communication_effectiveness_score:3.514,transparency_perception_score:3.894,security_posture_score:3.731,innovation_ideas_submitted:0.218,feedback_frequency_score:2.872,telework_adoption_score:2.905,security_incidents_quarter:2.0},
+  {quarter:'2014-Q2',employee_engagement_score:3.986,leadership_confidence_score:5.368,change_readiness_index:3.454,cultural_sentiment_score:5.043,change_resistance_index:7.603,digital_training_hours_quarter:2.327,digital_tool_adoption_score:3.619,collaboration_cross_bureau_index:3.623,communication_effectiveness_score:3.896,transparency_perception_score:4.01,security_posture_score:4.511,innovation_ideas_submitted:0.164,feedback_frequency_score:3.128,telework_adoption_score:3.03,security_incidents_quarter:2.0},
+  {quarter:'2014-Q3',employee_engagement_score:4.279,leadership_confidence_score:5.608,change_readiness_index:3.861,cultural_sentiment_score:5.224,change_resistance_index:7.236,digital_training_hours_quarter:3.8,digital_tool_adoption_score:3.686,collaboration_cross_bureau_index:4.109,communication_effectiveness_score:4.363,transparency_perception_score:4.538,security_posture_score:4.093,innovation_ideas_submitted:0.345,feedback_frequency_score:3.761,telework_adoption_score:3.609,security_incidents_quarter:2.0},
+  {quarter:'2014-Q4',employee_engagement_score:4.823,leadership_confidence_score:6.061,change_readiness_index:4.316,cultural_sentiment_score:6.107,change_resistance_index:6.677,digital_training_hours_quarter:4.273,digital_tool_adoption_score:4.529,collaboration_cross_bureau_index:4.46,communication_effectiveness_score:4.644,transparency_perception_score:4.999,security_posture_score:5.022,innovation_ideas_submitted:0.564,feedback_frequency_score:3.943,telework_adoption_score:4.115,security_incidents_quarter:0.0},
+  {quarter:'2015-Q1',employee_engagement_score:5.453,leadership_confidence_score:6.457,change_readiness_index:4.687,cultural_sentiment_score:6.61,change_resistance_index:6.327,digital_training_hours_quarter:5.273,digital_tool_adoption_score:4.885,collaboration_cross_bureau_index:5.08,communication_effectiveness_score:5.049,transparency_perception_score:5.631,security_posture_score:5.321,innovation_ideas_submitted:1.273,feedback_frequency_score:4.448,telework_adoption_score:4.729,security_incidents_quarter:2.0},
+  {quarter:'2015-Q2',employee_engagement_score:5.727,leadership_confidence_score:6.538,change_readiness_index:5.006,cultural_sentiment_score:6.753,change_resistance_index:5.949,digital_training_hours_quarter:5.218,digital_tool_adoption_score:5.751,collaboration_cross_bureau_index:5.135,communication_effectiveness_score:5.374,transparency_perception_score:5.885,security_posture_score:5.605,innovation_ideas_submitted:1.273,feedback_frequency_score:5.011,telework_adoption_score:5.207,security_incidents_quarter:1.0},
+  {quarter:'2015-Q3',employee_engagement_score:6.122,leadership_confidence_score:7.052,change_readiness_index:5.313,cultural_sentiment_score:7.433,change_resistance_index:5.703,digital_training_hours_quarter:5.982,digital_tool_adoption_score:5.801,collaboration_cross_bureau_index:5.736,communication_effectiveness_score:5.811,transparency_perception_score:6.148,security_posture_score:5.813,innovation_ideas_submitted:1.255,feedback_frequency_score:5.611,telework_adoption_score:5.564,security_incidents_quarter:1.0},
+  {quarter:'2015-Q4',employee_engagement_score:6.576,leadership_confidence_score:7.523,change_readiness_index:6.209,cultural_sentiment_score:7.909,change_resistance_index:4.767,digital_training_hours_quarter:5.564,digital_tool_adoption_score:6.089,collaboration_cross_bureau_index:6.009,communication_effectiveness_score:6.396,transparency_perception_score:6.737,security_posture_score:6.319,innovation_ideas_submitted:1.255,feedback_frequency_score:5.803,telework_adoption_score:6.434,security_incidents_quarter:2.0},
+  {quarter:'2016-Q1',employee_engagement_score:6.947,leadership_confidence_score:7.662,change_readiness_index:6.356,cultural_sentiment_score:8.21,change_resistance_index:4.591,digital_training_hours_quarter:5.6,digital_tool_adoption_score:6.786,collaboration_cross_bureau_index:6.54,communication_effectiveness_score:6.509,transparency_perception_score:7.253,security_posture_score:6.562,innovation_ideas_submitted:1.073,feedback_frequency_score:6.305,telework_adoption_score:6.819,security_incidents_quarter:1.0}
+];
+
+const dcliData = [12.1,16.0,24.5,27.9,34.0,40.0,45.2,49.4,53.0,57.3,60.0];
+const daiData  = [10.8,13.8,24.2,27.5,33.6,41.2,45.6,50.2,54.6,57.7,60.4];
+const lcsHistory = quarterlyData.map(d => d.leadership_confidence_score);
+
+const bureauData = [
+  {bureau:'Administrative Ops',leadership_confidence_score:5.852,employee_engagement_score:5.164,change_readiness_index:4.576,cultural_sentiment_score:6.795,digital_tool_adoption_score:4.841},
+  {bureau:'Consumer Gov Affairs',leadership_confidence_score:5.813,employee_engagement_score:4.321,change_readiness_index:4.185,cultural_sentiment_score:5.138,digital_tool_adoption_score:4.579},
+  {bureau:'Enforcement Bureau',leadership_confidence_score:5.584,employee_engagement_score:4.302,change_readiness_index:4.028,cultural_sentiment_score:4.738,digital_tool_adoption_score:4.067},
+  {bureau:'International Bureau',leadership_confidence_score:6.013,employee_engagement_score:5.098,change_readiness_index:4.592,cultural_sentiment_score:5.657,digital_tool_adoption_score:4.543},
+  {bureau:'Media Bureau',leadership_confidence_score:5.59,employee_engagement_score:4.949,change_readiness_index:4.461,cultural_sentiment_score:5.956,digital_tool_adoption_score:4.354},
+  {bureau:'OCIO',leadership_confidence_score:5.561,employee_engagement_score:5.242,change_readiness_index:4.251,cultural_sentiment_score:5.925,digital_tool_adoption_score:3.946},
+  {bureau:'Office of Communications',leadership_confidence_score:5.628,employee_engagement_score:4.49,change_readiness_index:4.094,cultural_sentiment_score:5.442,digital_tool_adoption_score:4.489},
+  {bureau:'Economics & Analytics',leadership_confidence_score:5.458,employee_engagement_score:5.012,change_readiness_index:4.714,cultural_sentiment_score:5.893,digital_tool_adoption_score:4.865},
+  {bureau:'General Counsel',leadership_confidence_score:5.696,employee_engagement_score:5.395,change_readiness_index:4.397,cultural_sentiment_score:5.486,digital_tool_adoption_score:5.032},
+  {bureau:'Legislative Affairs',leadership_confidence_score:4.994,employee_engagement_score:5.225,change_readiness_index:4.455,cultural_sentiment_score:6.573,digital_tool_adoption_score:4.107},
+  {bureau:'Managing Director',leadership_confidence_score:5.904,employee_engagement_score:4.845,change_readiness_index:4.158,cultural_sentiment_score:5.746,digital_tool_adoption_score:4.547},
+  {bureau:'Media Relations',leadership_confidence_score:5.718,employee_engagement_score:4.208,change_readiness_index:3.796,cultural_sentiment_score:4.634,digital_tool_adoption_score:4.293},
+  {bureau:'Strategic Planning',leadership_confidence_score:5.725,employee_engagement_score:4.944,change_readiness_index:4.363,cultural_sentiment_score:5.364,digital_tool_adoption_score:5.027},
+  {bureau:'Workplace Diversity',leadership_confidence_score:5.335,employee_engagement_score:4.565,change_readiness_index:3.485,cultural_sentiment_score:5.381,digital_tool_adoption_score:4.515},
+  {bureau:'Public Safety',leadership_confidence_score:5.572,employee_engagement_score:4.902,change_readiness_index:4.833,cultural_sentiment_score:5.439,digital_tool_adoption_score:4.12},
+  {bureau:'Wireless Telecom',leadership_confidence_score:5.517,employee_engagement_score:4.768,change_readiness_index:4.315,cultural_sentiment_score:5.58,digital_tool_adoption_score:4.416},
+  {bureau:'Wireline Competition',leadership_confidence_score:5.633,employee_engagement_score:4.293,change_readiness_index:3.795,cultural_sentiment_score:5.2,digital_tool_adoption_score:4.159}
+];
+
+const roleData = [
+  {role:'IT Staff',leadership_confidence_score:5.926,employee_engagement_score:5.476,change_readiness_index:4.937,cultural_sentiment_score:6.2,digital_tool_adoption_score:5.2},
+  {role:'Administrative',leadership_confidence_score:5.608,employee_engagement_score:4.509,change_readiness_index:4.087,cultural_sentiment_score:5.5,digital_tool_adoption_score:4.4},
+  {role:'Field Ops',leadership_confidence_score:5.474,employee_engagement_score:4.556,change_readiness_index:4.351,cultural_sentiment_score:5.3,digital_tool_adoption_score:4.2},
+  {role:'Policy Analyst',leadership_confidence_score:5.598,employee_engagement_score:4.674,change_readiness_index:4.21,cultural_sentiment_score:5.6,digital_tool_adoption_score:4.5},
+  {role:'Program Staff',leadership_confidence_score:5.569,employee_engagement_score:4.686,change_readiness_index:4.013,cultural_sentiment_score:5.4,digital_tool_adoption_score:4.3}
+];
+
+const migrationData = [
+  {phase:'Inventory',leadership_confidence_score:2.713,digital_tool_adoption_score:2.448,change_readiness_index:2.469,employee_engagement_score:2.7,cultural_sentiment_score:1.9},
+  {phase:'Consolidation',leadership_confidence_score:4.847,digital_tool_adoption_score:3.485,change_readiness_index:3.255,employee_engagement_score:3.8,cultural_sentiment_score:4.1},
+  {phase:'Migration',leadership_confidence_score:6.54,digital_tool_adoption_score:5.123,change_readiness_index:4.899,employee_engagement_score:5.3,cultural_sentiment_score:6.4},
+  {phase:'Optimization',leadership_confidence_score:7.662,digital_tool_adoption_score:6.786,change_readiness_index:6.356,employee_engagement_score:6.9,cultural_sentiment_score:8.2}
+];
+
+const predPoly   = [7.512, 7.435, 7.268, 7.012];
+const predLinear = [8.679, 9.186, 9.693, 10.0];
+const predCI     = 0.223;
+const predLinCI  = 0.455;
+let predModel = 'poly';
+let chartPred = null, chartDcliPred = null;
+
+// ═══════════════════════════════════════════════════
+//  PALETTE helpers (blue only)
+// ═══════════════════════════════════════════════════
+const BLUES = [
+  '#1a3a7a','#1e4d9e','#2563c8','#3b7de8','#5b9af4',
+  '#7db4f8','#93bff8','#aecffb','#bdd6fb','#d2e5fd'
+];
+// Risk color by value relative to scale 0–10
+function riskColor(v, invert=false) {
+  const hi = invert ? v < 4.5 : v >= 7;
+  const lo = invert ? v > 6.5 : v < 5;
+  if (hi) return { bg:'rgba(22,163,74,.18)', bd:'#16a34a' };
+  if (lo) return { bg:'rgba(220,38,38,.15)', bd:'#dc2626' };
+  return   { bg:'rgba(217,119,6,.15)', bd:'#d97706' };
+}
+
+Chart.defaults.color = '#5a7299';
+Chart.defaults.borderColor = '#c8d8ee';
+Chart.defaults.font.family = "'Segoe UI', system-ui, sans-serif";
+
+// ═══════════════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════════════
+function showTab(name, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  btn.classList.add('active');
+  if (name === 'prediction')  renderPrediction();
+  if (name === 'segmentation') renderSegCharts();
+}
+
+// ═══════════════════════════════════════════════════
+//  OVERVIEW
+// ═══════════════════════════════════════════════════
+function renderOverview() {
+  // DCLI / DAI
+  new Chart(document.getElementById('chart-dcli-dai'), {
+    type: 'line',
+    data: {
+      labels: quarters,
+      datasets: [
+        {
+          label: 'DCLI',
+          data: dcliData,
+          borderColor: '#1e4d9e',
+          backgroundColor: ctx => {
+            const g = ctx.chart.ctx.createLinearGradient(0,0,0,250);
+            g.addColorStop(0,'rgba(30,77,158,0.25)'); g.addColorStop(1,'rgba(30,77,158,0.02)'); return g;
+          },
+          fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor:'#1e4d9e', borderWidth:2.5
+        },
+        {
+          label: 'DAI',
+          data: daiData,
+          borderColor: '#5b9af4',
+          backgroundColor: ctx => {
+            const g = ctx.chart.ctx.createLinearGradient(0,0,0,250);
+            g.addColorStop(0,'rgba(91,154,244,0.18)'); g.addColorStop(1,'rgba(91,154,244,0.01)'); return g;
+          },
+          fill: true, tension: 0.4, pointRadius: 5, pointBackgroundColor:'#5b9af4', borderDash:[5,3], borderWidth:2
+        },
+        { label:'Meta (75)', data:Array(11).fill(75), borderColor:'rgba(220,38,38,0.55)', borderDash:[7,5], pointRadius:0, fill:false, borderWidth:1.5 }
+      ]
+    },
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{ labels:{ usePointStyle:true, padding:18 } } },
+      scales:{
+        x:{ grid:{color:'rgba(200,216,238,0.5)'} },
+        y:{ min:0, max:100, grid:{color:'rgba(200,216,238,0.5)'}, ticks:{stepSize:20} }
+      }
+    }
+  });
+
+  // Leadership KPIs
+  new Chart(document.getElementById('chart-leadership'), {
+    type:'line',
+    data:{
+      labels: quarters,
+      datasets:[
+        {label:'Leadership Confidence', data:quarterlyData.map(d=>d.leadership_confidence_score), borderColor:'#1a3a7a', tension:0.4, pointRadius:3, fill:false, borderWidth:2.5},
+        {label:'Employee Engagement',   data:quarterlyData.map(d=>d.employee_engagement_score),   borderColor:'#3b7de8', tension:0.4, pointRadius:3, fill:false, borderWidth:2},
+        {label:'Cultural Sentiment',    data:quarterlyData.map(d=>d.cultural_sentiment_score),     borderColor:'#7db4f8', tension:0.4, pointRadius:3, fill:false, borderWidth:2},
+        {label:'Transparency',          data:quarterlyData.map(d=>d.transparency_perception_score),borderColor:'#93bff8', tension:0.4, pointRadius:3, fill:false, borderWidth:1.5, borderDash:[4,3]}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true, font:{size:10}, padding:10}}},
+      scales:{ x:{grid:{color:'rgba(200,216,238,0.5)'}}, y:{min:0,max:10,grid:{color:'rgba(200,216,238,0.5)'}} }
+    }
+  });
+
+  // Resistance vs Readiness — semaphore colors justified here (risk)
+  new Chart(document.getElementById('chart-resistance'), {
+    type:'line',
+    data:{
+      labels: quarters,
+      datasets:[
+        {label:'Change Resistance (alto = riesgo alto)', data:quarterlyData.map(d=>d.change_resistance_index), borderColor:'#dc2626', backgroundColor:'rgba(220,38,38,0.08)', fill:true, tension:0.4, pointRadius:3, borderWidth:2},
+        {label:'Change Readiness (alto = bajo riesgo)',  data:quarterlyData.map(d=>d.change_readiness_index),  borderColor:'#16a34a', backgroundColor:'rgba(22,163,74,0.06)',  fill:true, tension:0.4, pointRadius:3, borderWidth:2}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true, font:{size:10}, padding:12}}},
+      scales:{ x:{grid:{color:'rgba(200,216,238,0.5)'}}, y:{min:0,max:10,grid:{color:'rgba(200,216,238,0.5)'}} }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  KPI TAB
+// ═══════════════════════════════════════════════════
+let chartKpiMain = null;
+function updateKpiChart() {
+  const kpi = document.getElementById('kpi-select').value;
+  const label = document.getElementById('kpi-select').selectedOptions[0].text;
+  document.getElementById('kpi-chart-title').textContent = label + ' — Evolución trimestral';
+  const values = quarterlyData.map(d => +d[kpi]);
+  if (chartKpiMain) chartKpiMain.destroy();
+  const ctx = document.getElementById('chart-kpi-main').getContext('2d');
+  chartKpiMain = new Chart(ctx, {
+    type:'bar',
+    data:{
+      labels: quarters,
+      datasets:[
+        {
+          label: label,
+          data: values,
+          backgroundColor: values.map((_,i) => `rgba(30,77,158,${0.35 + i*0.055})`),
+          borderColor: '#1e4d9e', borderWidth:1, borderRadius:5
+        },
+        { type:'line', label:'Tendencia', data:values, borderColor:'#3b7de8', borderWidth:2, pointRadius:4, pointBackgroundColor:'#3b7de8', fill:false, tension:0.4 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true, padding:14}}},
+      scales:{ x:{grid:{color:'rgba(200,216,238,0.5)'}}, y:{grid:{color:'rgba(200,216,238,0.5)'}} }
+    }
+  });
+}
+
+function renderKpis() {
+  updateKpiChart();
+
+  // Radar
+  new Chart(document.getElementById('chart-radar'), {
+    type:'radar',
+    data:{
+      labels:['Liderazgo','Engagement','Preparación','Herramientas','Colaboración','Transparencia'],
+      datasets:[
+        {label:'2013-Q3 (inicio)', data:[2.318,2.454,2.234,2.277,2.668,2.971], borderColor:'#93bff8', backgroundColor:'rgba(147,191,248,0.2)', pointRadius:4, borderWidth:1.5},
+        {label:'2016-Q1 (actual)', data:[7.662,6.947,6.356,6.786,6.54,7.253],  borderColor:'#1a3a7a', backgroundColor:'rgba(26,58,122,0.18)', pointRadius:4, borderWidth:2.5}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      scales:{r:{min:0,max:10,grid:{color:'rgba(200,216,238,0.7)'},ticks:{stepSize:2,font:{size:9}},pointLabels:{color:'#2e4d7a',font:{size:10}}}},
+      plugins:{legend:{labels:{usePointStyle:true,padding:12}}}
+    }
+  });
+
+  // Adoption
+  new Chart(document.getElementById('chart-adoption'), {
+    type:'line',
+    data:{
+      labels: quarters,
+      datasets:[
+        {label:'Training Hours',  data:quarterlyData.map(d=>d.digital_training_hours_quarter), borderColor:'#1a3a7a', tension:0.4, pointRadius:3, yAxisID:'y1', borderWidth:2.5},
+        {label:'Tool Adoption',   data:quarterlyData.map(d=>d.digital_tool_adoption_score),    borderColor:'#3b7de8', tension:0.4, pointRadius:3, yAxisID:'y',  borderWidth:2},
+        {label:'Telework',        data:quarterlyData.map(d=>d.telework_adoption_score),         borderColor:'#93bff8', tension:0.4, pointRadius:3, yAxisID:'y',  borderWidth:1.5, borderDash:[4,2]}
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true,font:{size:10},padding:10}}},
+      scales:{
+        y: {min:0,max:10,grid:{color:'rgba(200,216,238,0.5)'},position:'left'},
+        y1:{min:0,max:10,grid:{display:false},position:'right',ticks:{color:'#1a3a7a'}},
+        x: {grid:{color:'rgba(200,216,238,0.5)'}}
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  SEGMENTATION
+// ═══════════════════════════════════════════════════
+let chartBureau = null, chartRoleMig = null;
+function updateSegCharts() { renderSegCharts(); }
+
+function renderSegCharts() {
+  const kpi = document.getElementById('seg-kpi').value;
+  const sorted = [...bureauData].sort((a,b) => b[kpi] - a[kpi]);
+  const vals   = sorted.map(d => d[kpi]);
+  const max    = Math.max(...vals), min = Math.min(...vals);
+  const threshold_hi = min + (max-min)*0.66;
+  const threshold_lo = min + (max-min)*0.33;
+  const colors = vals.map(v => v >= threshold_hi ? 'rgba(22,163,74,0.75)' : v <= threshold_lo ? 'rgba(220,38,38,0.72)' : 'rgba(217,119,6,0.72)');
+  const borders= vals.map(v => v >= threshold_hi ? '#16a34a' : v <= threshold_lo ? '#dc2626' : '#d97706');
+
+  if (chartBureau) chartBureau.destroy();
+  chartBureau = new Chart(document.getElementById('chart-bureau'), {
+    type:'bar',
+    data:{
+      labels: sorted.map(d=>d.bureau),
+      datasets:[{ label: kpi.replace(/_/g,' '), data:vals, backgroundColor:colors, borderColor:borders, borderWidth:1, borderRadius:4 }]
+    },
+    options:{
+      indexAxis:'y', responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x:{min:0,max:10,grid:{color:'rgba(200,216,238,0.5)'}}, y:{grid:{display:false},ticks:{font:{size:10}}} }
+    }
+  });
+
+  // Role + Migration
+  const rVals = roleData.map(d => d[kpi]||0);
+  const mVals = migrationData.map(d => d[kpi]||0);
+  const rColors = rVals.map((_,i) => BLUES[i*2]);
+  // Migration gets risk colors (low→red, high→green, proportional to phase)
+  const mColors = ['rgba(220,38,38,0.72)','rgba(217,119,6,0.72)','rgba(30,120,200,0.72)','rgba(22,163,74,0.75)'];
+
+  if (chartRoleMig) chartRoleMig.destroy();
+  chartRoleMig = new Chart(document.getElementById('chart-role-migration'), {
+    type:'bar',
+    data:{
+      labels:[...roleData.map(d=>d.role),'·',...migrationData.map(d=>d.phase)],
+      datasets:[{
+        label: kpi.replace(/_/g,' '),
+        data:[...rVals, null, ...mVals],
+        backgroundColor:[...rColors, 'transparent', ...mColors],
+        borderColor:[...rColors.map(c=>c), 'transparent', '#dc2626','#d97706','#3b7de8','#16a34a'],
+        borderWidth:1, borderRadius:5
+      }]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{ x:{grid:{color:'rgba(200,216,238,0.5)'},ticks:{font:{size:10}}}, y:{min:0,max:10,grid:{color:'rgba(200,216,238,0.5)'}} }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════
+//  PREDICTION
+// ═══════════════════════════════════════════════════
+function setPredModel(m) {
+  predModel = m;
+  document.getElementById('btn-poly').classList.toggle('active', m==='poly');
+  document.getElementById('btn-linear').classList.toggle('active', m==='linear');
+  renderPrediction();
+}
+function updatePredChart() { renderPrediction(); }
+
+function renderPrediction() {
+  const preds   = predModel === 'poly' ? predPoly : predLinear;
+  const ci      = predModel === 'poly' ? predCI   : predLinCI;
+  const showCI  = document.getElementById('show-ci').checked;
+  const dcliEst = v => +(5.10 + 6.55 * v).toFixed(1);
+
+  // Risk chip for each prediction vs meta 8.2
+  function predRisk(v) {
+    const pct = v / 8.2;
+    if (pct >= 0.97) return '<span class="risk-chip green"><div class="dot"></div>Bajo riesgo</span>';
+    if (pct >= 0.85) return '<span class="risk-chip yellow"><div class="dot"></div>Riesgo medio</span>';
+    return '<span class="risk-chip red"><div class="dot"></div>Alto riesgo</span>';
+  }
+
+  document.getElementById('pred-metrics').innerHTML = futureQ.map((q,i) => `
+    <div class="pred-metric">
+      <div class="quarter">${q}</div>
+      <div class="value">${preds[i].toFixed(2)}</div>
+      <div class="ci">IC [${Math.max(0,preds[i]-ci).toFixed(2)}, ${Math.min(10,preds[i]+ci).toFixed(2)}]</div>
+      <div class="dcli">DCLI estimado: ~${dcliEst(preds[i])}</div>
+      ${predRisk(preds[i])}
+    </div>`).join('');
+
+  if (chartPred) chartPred.destroy();
+  const ctx = document.getElementById('chart-prediction').getContext('2d');
+  const datasets = [
+    {
+      label:'LCS Histórico',
+      data:[...lcsHistory, ...Array(4).fill(null)],
+      borderColor:'#1a3a7a', backgroundColor:'rgba(26,58,122,0.1)',
+      fill:false, tension:0.4, pointRadius:5, pointBackgroundColor:'#1a3a7a', borderWidth:2.5
+    },
+    {
+      label:'Predicción (' + (predModel==='poly'?'Polinomial':'Lineal') + ')',
+      data:[...Array(10).fill(null), lcsHistory[10], ...preds],
+      borderColor:'#3b7de8', borderDash:[6,3],
+      fill:false, tension:0.3,
+      pointRadius:[...Array(11).fill(0), 6,6,6,6],
+      pointStyle:[...Array(11).fill('circle'),'triangle','triangle','triangle','triangle'],
+      pointBackgroundColor:'#3b7de8', borderWidth:2
+    },
+    { label:'Meta OKR (8.2)', data:Array(15).fill(8.2), borderColor:'rgba(220,38,38,0.55)', borderDash:[8,4], pointRadius:0, fill:false, borderWidth:1.5 }
+  ];
+
+  if (showCI) {
+    datasets.push(
+      { label:'IC Superior', data:[...Array(10).fill(null), lcsHistory[10], ...preds.map(p=>Math.min(10,p+ci))], borderColor:'rgba(91,154,244,0.4)', backgroundColor:'rgba(91,154,244,0.1)', fill:'+1', pointRadius:0, borderDash:[3,3], tension:0.3, borderWidth:1 },
+      { label:'IC Inferior', data:[...Array(10).fill(null), lcsHistory[10], ...preds.map(p=>Math.max(0,p-ci))],  borderColor:'rgba(91,154,244,0.4)', backgroundColor:'rgba(91,154,244,0.1)', fill:false, pointRadius:0, borderDash:[3,3], tension:0.3, borderWidth:1 }
+    );
+  }
+
+  chartPred = new Chart(ctx, {
+    type:'line',
+    data:{ labels:allQ, datasets },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{
+        legend:{ labels:{ usePointStyle:true, font:{size:10}, padding:14,
+          filter: i => !['IC Superior','IC Inferior'].includes(i.text) || showCI
+        }},
+        tooltip:{ callbacks:{ label: c => `${c.dataset.label}: ${c.parsed.y != null ? c.parsed.y.toFixed(3) : '—'}` } }
+      },
+      scales:{
+        x:{ grid:{color:'rgba(200,216,238,0.5)'}, ticks:{font:{size:10}} },
+        y:{ min:0, max:10, grid:{color:'rgba(200,216,238,0.5)'}, ticks:{stepSize:1} }
+      }
+    }
+  });
+
+  if (chartDcliPred) chartDcliPred.destroy();
+  chartDcliPred = new Chart(document.getElementById('chart-dcli-pred'), {
+    type:'line',
+    data:{
+      labels:allQ,
+      datasets:[
+        { label:'DCLI Histórico',   data:[...dcliData,...Array(4).fill(null)], borderColor:'#1a3a7a', fill:false, tension:0.4, pointRadius:4, borderWidth:2.5 },
+        { label:'DCLI Proyectado',  data:[...Array(10).fill(null), dcliData[10],...preds.map(p=>dcliEst(p))], borderColor:'#3b7de8', borderDash:[5,3], fill:false, tension:0.3, pointRadius:4, borderWidth:2 },
+        { label:'Meta DCLI (75)',   data:Array(15).fill(75), borderColor:'rgba(220,38,38,0.5)', borderDash:[7,4], pointRadius:0, fill:false, borderWidth:1.5 }
+      ]
+    },
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{labels:{usePointStyle:true,font:{size:10},padding:10}}},
+      scales:{
+        x:{grid:{color:'rgba(200,216,238,0.5)'},ticks:{font:{size:9}}},
+        y:{min:0,max:100,grid:{color:'rgba(200,216,238,0.5)'}}
+      }
+    }
+  });
+
+  const ctxR = document.getElementById('chart-ranking');
+  if (!ctxR._done) {
+    ctxR._done = true;
+    new Chart(ctxR, {
+      type:'bar',
+      data:{
+        labels:['leadership_confidence','cultural_sentiment','employee_engagement','feedback_frequency','training_hours','transparency','communication_eff','quick_wins'],
+        datasets:[{
+          label:'Correlación con DCLI siguiente trimestre',
+          data:[0.804,0.755,0.723,0.710,0.700,0.685,0.685,0.684],
+          backgroundColor: [0.804,0.755,0.723,0.710,0.700,0.685,0.685,0.684].map(
+            v => v >= 0.77 ? 'rgba(26,58,122,0.85)' : v >= 0.71 ? 'rgba(30,77,158,0.7)' : 'rgba(91,154,244,0.65)'
+          ),
+          borderRadius:4
+        }]
+      },
+      options:{
+        indexAxis:'y', responsive:true, maintainAspectRatio:false,
+        plugins:{legend:{display:false}},
+        scales:{
+          x:{min:0.6,max:0.85,grid:{color:'rgba(200,216,238,0.5)'}},
+          y:{grid:{display:false},ticks:{font:{size:9}}}
+        }
+      }
+    });
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+renderOverview();
+renderKpis();
+</script>
+</body>
+</html>
