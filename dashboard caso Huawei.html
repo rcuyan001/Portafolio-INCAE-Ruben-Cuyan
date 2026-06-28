@@ -23,6 +23,8 @@
   .topbar { background: var(--blue); color: #fff; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
   .topbar h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
   .topbar span { font-size: 12px; opacity: .75; }
+  .topbar a { color: #fff; text-decoration: none; font-size: 13px; font-weight: 600; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 6px; transition: background 0.2s; }
+  .topbar a:hover { background: rgba(255,255,255,0.25); }
 
   /* ── YEAR SELECTOR ── */
   .year-bar { background: #fff; border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; align-items: center; gap: 16px; }
@@ -68,7 +70,7 @@
   /* ── OKR TABLE ── */
   .okr-section { margin-top: 20px; }
   .okr-group { margin-bottom: 18px; }
-  .okr-header { font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 8px 8px 0 0; border: 1px solid var(--border); border-bottom: none; display: flex; justify-content: space-between; align-items: center; }
+  .okr-header { font-size: 13px; font-weight: 700; padding: 8px 12px; border-radius: 8px 8px 0 0; border: 1px solid var(--border); border-bottom: none; display: flex; justify-content: space-betwee[...]
   .okr-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 0 0 8px 8px; overflow: hidden; }
   .okr-table th { background: var(--gray-lt); font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); padding: 7px 12px; text-align: left; }
   .okr-table td { padding: 8px 12px; border-top: 1px solid var(--border); font-size: 12px; vertical-align: middle; }
@@ -129,7 +131,10 @@
 <!-- ══════════ TOP BAR ══════════ -->
 <div class="topbar">
   <h1>🔵 Huawei — Dynamic Alignment Dashboard</h1>
-  <span>DAI · OKRs · Smart KPIs | Alineamiento Dinámico</span>
+  <div>
+    <span>DAI · OKRs · Smart KPIs | Alineamiento Dinámico</span>
+    <a href="index.html" style="margin-left: 20px;">← Volver al inicio</a>
+  </div>
 </div>
 
 <!-- ══════════ YEAR SELECTOR ══════════ -->
@@ -298,46 +303,46 @@
 
 </div><!-- /container -->
 
-<div class="footer">Huawei Dynamic Alignment Dashboard · Línea base 2020 DAI: 94.1/100 · Basado en OKRs_DAI_Smart_KPIs_Huawei_Alineamiento_Dinamico.docx &amp; huawei_dynamic_alignment_data.csv</div>
+<div class="footer">Huawei Dynamic Alignment Dashboard · Línea base 2020 DAI: 94.1/100 · Basado en OKRs_DAI_Smart_KPIs_Huawei_Alineamiento_Dinamico.docx &amp; huawei_dynamic_alignment_data.csv[...]
 
 <!-- ══════════ DATA & LOGIC ══════════ -->
 <script>
-// ── RAW DATA ──────────────────────────────────────────────────────────────────
+// ── RAW DATA ────────────────────────────────────────────────────────────[...]
 const RAW = [
-  {y:1987,Rev:0.0055,NI:-0,TA:0.01,RD:0,RDPct:0,Pat:11,FTR:13.6,Emp:1,IntEmpPct:1.68,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:8.36,CustSol:1,CoCr:0,CSI:52.6,S247:0,PDC:97.3,XDept:2,FDA:5.3,OrgType:"Centralized",SP:3,JV:0,UniColl:0,TPA:0,EcoPtn:3,CntryPerc:26.2,AnalystClarity:25.2,BrandPrem:17.5,GovCredit:0,GeoPol:11.7,EmpEng:58.3,TrainHrs:11.2,NewProd:1,DigMat:12.7},
-  {y:1988,Rev:0.03,NI:0,TA:0.06,RD:0,RDPct:0,Pat:21,FTR:5.1,Emp:416,IntEmpPct:1.35,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.79,CustSol:1,CoCr:0,CSI:53.1,S247:0,PDC:91.2,XDept:1,FDA:8.1,OrgType:"Centralized",SP:1,JV:0,UniColl:0,TPA:0,EcoPtn:1,CntryPerc:27,AnalystClarity:33.5,BrandPrem:10.4,GovCredit:0,GeoPol:16.7,EmpEng:59.7,TrainHrs:19.4,NewProd:2,DigMat:8.7},
-  {y:1989,Rev:0.18,NI:0,TA:0.31,RD:0.01,RDPct:5.56,Pat:24,FTR:10.1,Emp:795,IntEmpPct:1.47,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.27,CustSol:4,CoCr:0,CSI:48.5,S247:0,PDC:84.8,XDept:1,FDA:12.8,OrgType:"Centralized",SP:1,JV:0,UniColl:0,TPA:0,EcoPtn:1,CntryPerc:22.1,AnalystClarity:27.1,BrandPrem:12.5,GovCredit:0,GeoPol:19.3,EmpEng:51.2,TrainHrs:16.3,NewProd:2,DigMat:5.7},
-  {y:1990,Rev:1,NI:0.01,TA:1.57,RD:0.05,RDPct:5,Pat:8,FTR:9.2,Emp:1492,IntEmpPct:0.42,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.48,CustSol:1,CoCr:0,CSI:49.6,S247:0,PDC:93.6,XDept:2,FDA:7.8,OrgType:"Centralized",SP:2,JV:0,UniColl:0,TPA:0,EcoPtn:2,CntryPerc:21.4,AnalystClarity:30,BrandPrem:17.1,GovCredit:0,GeoPol:15.6,EmpEng:57.3,TrainHrs:13.3,NewProd:2,DigMat:5.8},
-  {y:1991,Rev:2.61,NI:-0.09,TA:5.17,RD:0.1,RDPct:3.83,Pat:9,FTR:7.2,Emp:1753,IntEmpPct:1.08,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.61,CustSol:4,CoCr:0,CSI:51.5,S247:0,PDC:94.8,XDept:1,FDA:7.2,OrgType:"Centralized",SP:2,JV:0,UniColl:0,TPA:0,EcoPtn:2,CntryPerc:20.1,AnalystClarity:22.6,BrandPrem:19,GovCredit:0,GeoPol:15.7,EmpEng:59.4,TrainHrs:11.4,NewProd:2,DigMat:6},
-  {y:1992,Rev:6.79,NI:-0.23,TA:12.28,RD:0.44,RDPct:6.48,Pat:27,FTR:6.2,Emp:2216,IntEmpPct:1.39,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:9.24,CustSol:4,CoCr:0,CSI:45.5,S247:0,PDC:84.8,XDept:1,FDA:7.1,OrgType:"Centralized",SP:3,JV:0,UniColl:0,TPA:0,EcoPtn:3,CntryPerc:23.5,AnalystClarity:22.9,BrandPrem:15.1,GovCredit:0,GeoPol:12.8,EmpEng:51.8,TrainHrs:17.9,NewProd:2,DigMat:13.4},
-  {y:1993,Rev:17.68,NI:0.93,TA:28.03,RD:1.08,RDPct:6.11,Pat:11,FTR:8.4,Emp:2377,IntEmpPct:0.46,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:5.68,CustSol:4,CoCr:0,CSI:54.5,S247:0,PDC:87.6,XDept:0,FDA:10.2,OrgType:"Centralized",SP:4,JV:0,UniColl:0,TPA:0,EcoPtn:4,CntryPerc:25.9,AnalystClarity:20.6,BrandPrem:15.3,GovCredit:0,GeoPol:17.7,EmpEng:50.7,TrainHrs:16.2,NewProd:2,DigMat:14.1},
-  {y:1994,Rev:46.06,NI:3.9,TA:85.06,RD:3.77,RDPct:8.18,Pat:17,FTR:14.4,Emp:2962,IntEmpPct:0.35,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:8.54,CustSol:1,CoCr:0,CSI:53.9,S247:0,PDC:90.7,XDept:2,FDA:14.8,OrgType:"Centralized",SP:3,JV:0,UniColl:0,TPA:0,EcoPtn:3,CntryPerc:23.9,AnalystClarity:22.5,BrandPrem:11.1,GovCredit:0,GeoPol:11.9,EmpEng:57.4,TrainHrs:15.3,NewProd:1,DigMat:6.2},
-  {y:1995,Rev:120,NI:8.89,TA:182.89,RD:9.98,RDPct:8.32,Pat:19,FTR:8.2,Emp:3889,IntEmpPct:1.96,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:7.76,CustSol:3,CoCr:0,CSI:47.6,S247:0,PDC:89.9,XDept:2,FDA:9.6,OrgType:"Centralized",SP:1,JV:0,UniColl:0,TPA:0,EcoPtn:1,CntryPerc:24.4,AnalystClarity:24.2,BrandPrem:14.5,GovCredit:0,GeoPol:13.2,EmpEng:55.7,TrainHrs:18.9,NewProd:1,DigMat:7.4},
-  {y:1996,Rev:309.84,NI:24.27,TA:661.98,RD:19.28,RDPct:6.22,Pat:85,FTR:19,Emp:9349,IntEmpPct:3.01,Cntrs:1,IntSales:3.99,EmgSales:100,DevSales:0,SvcRev:11.8,CustSol:13,CoCr:0,CSI:57,S247:0,PDC:88.3,XDept:1,FDA:10.6,OrgType:"Centralized",SP:15,JV:0,UniColl:0,TPA:0,EcoPtn:15,CntryPerc:34.8,AnalystClarity:38.4,BrandPrem:22.5,GovCredit:0,GeoPol:14.3,EmpEng:58.4,TrainHrs:17.9,NewProd:6,DigMat:18.3},
-  {y:1997,Rev:800,NI:40.66,TA:1344.92,RD:56.6,RDPct:7.08,Pat:106,FTR:23.8,Emp:12926,IntEmpPct:3.81,Cntrs:2,IntSales:4.7,EmgSales:96.86,DevSales:3.14,SvcRev:13.84,CustSol:23,CoCr:0,CSI:60.9,S247:0,PDC:83.2,XDept:2,FDA:13.6,OrgType:"Centralized",SP:27,JV:1,UniColl:0,TPA:0,EcoPtn:27,CntryPerc:37.4,AnalystClarity:41.4,BrandPrem:24.5,GovCredit:0,GeoPol:15.1,EmpEng:51.4,TrainHrs:11.5,NewProd:9,DigMat:21.7},
-  {y:1998,Rev:1214.64,NI:107.86,TA:2385.27,RD:114.95,RDPct:9.46,Pat:161,FTR:26.2,Emp:20116,IntEmpPct:5.6,Cntrs:3,IntSales:6.11,EmgSales:92.93,DevSales:7.07,SvcRev:15.27,CustSol:29,CoCr:0,CSI:62.5,S247:0,PDC:78.2,XDept:0,FDA:10.4,OrgType:"Centralized",SP:32,JV:2,UniColl:0,TPA:0,EcoPtn:32,CntryPerc:42.1,AnalystClarity:44.7,BrandPrem:26.8,GovCredit:550,GeoPol:12.4,EmpEng:58,TrainHrs:13.1,NewProd:9,DigMat:29},
-  {y:1999,Rev:1844.17,NI:153.62,TA:3168.65,RD:229.64,RDPct:12.45,Pat:174,FTR:34.8,Emp:27176,IntEmpPct:6.74,Cntrs:4,IntSales:11.95,EmgSales:93.74,DevSales:6.26,SvcRev:18.45,CustSol:33,CoCr:0,CSI:65.2,S247:0,PDC:74,XDept:0,FDA:6.8,OrgType:"Centralized",SP:57,JV:6,UniColl:0,TPA:0,EcoPtn:57,CntryPerc:48.3,AnalystClarity:50.7,BrandPrem:29.5,GovCredit:10000,GeoPol:11.1,EmpEng:52,TrainHrs:12.5,NewProd:15,DigMat:29.7},
-  {y:2000,Rev:2800,NI:163.78,TA:5219.33,RD:321.81,RDPct:11.49,Pat:265,FTR:39.6,Emp:27295,IntEmpPct:7.12,Cntrs:5,IntSales:11.79,EmgSales:84.04,DevSales:15.96,SvcRev:17.91,CustSol:45,CoCr:0,CSI:68.4,S247:11.68,PDC:69.9,XDept:0,FDA:8,OrgType:"Centralized",SP:60,JV:8,UniColl:0,TPA:0,EcoPtn:60,CntryPerc:49,AnalystClarity:52.1,BrandPrem:30.1,GovCredit:10993,GeoPol:16.1,EmpEng:51.6,TrainHrs:17.4,NewProd:18,DigMat:33.1},
-  {y:2001,Rev:5000,NI:286.36,TA:9413.49,RD:340,RDPct:6.8,Pat:206,FTR:36,Emp:19323,IntEmpPct:8.92,Cntrs:6,IntSales:25.87,EmgSales:85.3,DevSales:14.7,SvcRev:19.03,CustSol:59,CoCr:2,CSI:70.7,S247:26.56,PDC:62.2,XDept:5,FDA:17.3,OrgType:"Transitional",SP:71,JV:5,UniColl:4,TPA:7,EcoPtn:175,CntryPerc:55.5,AnalystClarity:57.4,BrandPrem:33.9,GovCredit:11606,GeoPol:22.3,EmpEng:56.2,TrainHrs:23.1,NewProd:15,DigMat:35.7},
-  {y:2002,Rev:6708.2,NI:384.62,TA:10930.33,RD:692.53,RDPct:10.32,Pat:288,FTR:43,Emp:26988,IntEmpPct:8.13,Cntrs:8,IntSales:25.07,EmgSales:84.65,DevSales:15.35,SvcRev:24.9,CustSol:47,CoCr:8,CSI:75.6,S247:35.78,PDC:56.9,XDept:7,FDA:19.8,OrgType:"Transitional",SP:89,JV:12,UniColl:10,TPA:18,EcoPtn:316,CntryPerc:63.1,AnalystClarity:63,BrandPrem:35.5,GovCredit:11856,GeoPol:25.2,EmpEng:58.6,TrainHrs:28.3,NewProd:24,DigMat:44.5},
-  {y:2003,Rev:9000,NI:559.53,TA:19608.38,RD:832.88,RDPct:9.25,Pat:346,FTR:43.8,Emp:41225,IntEmpPct:9.29,Cntrs:10,IntSales:29.79,EmgSales:73.63,DevSales:26.37,SvcRev:23.55,CustSol:69,CoCr:12,CSI:78.6,S247:53.63,PDC:55.2,XDept:12,FDA:22.3,OrgType:"Transitional",SP:77,JV:7,UniColl:9,TPA:27,EcoPtn:509,CntryPerc:69.2,AnalystClarity:70,BrandPrem:38.6,GovCredit:12204,GeoPol:26.5,EmpEng:60,TrainHrs:33.6,NewProd:27,DigMat:45.1},
-  {y:2004,Rev:12000,NI:1274.85,TA:24511.12,RD:1229.27,RDPct:10.24,Pat:320,FTR:47.1,Emp:47200,IntEmpPct:11.72,Cntrs:12,IntSales:37.54,EmgSales:70.5,DevSales:29.5,SvcRev:24.14,CustSol:59,CoCr:8,CSI:80.8,S247:58.52,PDC:44.4,XDept:11,FDA:26.2,OrgType:"Transitional",SP:104,JV:8,UniColl:16,TPA:36,EcoPtn:458,CntryPerc:59.6,AnalystClarity:62.7,BrandPrem:39.1,GovCredit:12882,GeoPol:29.9,EmpEng:61.1,TrainHrs:39,NewProd:30,DigMat:55.4},
-  {y:2005,Rev:16000,NI:1625.56,TA:34522.39,RD:1648.12,RDPct:10.3,Pat:410,FTR:45.7,Emp:58893,IntEmpPct:13.39,Cntrs:14,IntSales:39.74,EmgSales:65.19,DevSales:34.81,SvcRev:28.97,CustSol:75,CoCr:15,CSI:81.4,S247:67.82,PDC:41.9,XDept:13,FDA:26.7,OrgType:"Transitional",SP:115,JV:9,UniColl:25,TPA:45,EcoPtn:795,CntryPerc:78.5,AnalystClarity:81,BrandPrem:48.9,GovCredit:13738,GeoPol:32.7,EmpEng:61.8,TrainHrs:38.4,NewProd:23,DigMat:49.1},
-  {y:2006,Rev:22000,NI:2080.35,TA:46780.34,RD:3502.05,RDPct:15.92,Pat:793,FTR:54.2,Emp:46000,IntEmpPct:14.36,Cntrs:23,IntSales:43.96,EmgSales:64.02,DevSales:35.98,SvcRev:32.05,CustSol:126,CoCr:12,CSI:76.8,S247:66.49,PDC:40.4,XDept:15,FDA:29.8,OrgType:"Transitional",SP:205,JV:19,UniColl:30,TPA:36,EcoPtn:716,CntryPerc:63,AnalystClarity:67.6,BrandPrem:44.2,GovCredit:13248,GeoPol:32.3,EmpEng:66.3,TrainHrs:47.9,NewProd:33,DigMat:54.6},
-  {y:2007,Rev:29664.79,NI:3280.71,TA:56912.79,RD:4612.94,RDPct:15.55,Pat:1166,FTR:58,Emp:73014,IntEmpPct:15.81,Cntrs:31,IntSales:47.73,EmgSales:58.58,DevSales:41.42,SvcRev:35.77,CustSol:176,CoCr:28,CSI:78.4,S247:74.16,PDC:39,XDept:17,FDA:33.4,OrgType:"Transitional",SP:274,JV:23,UniColl:21,TPA:42,EcoPtn:1198,CntryPerc:65,AnalystClarity:69.2,BrandPrem:48.7,GovCredit:13512,GeoPol:36.4,EmpEng:64.7,TrainHrs:42.5,NewProd:45,DigMat:58.4},
-  {y:2008,Rev:40000,NI:3478.99,TA:85812.48,RD:6619.54,RDPct:16.55,Pat:1337,FTR:59.3,Emp:81000,IntEmpPct:19.16,Cntrs:39,IntSales:52,EmgSales:54.28,DevSales:45.72,SvcRev:36.08,CustSol:182,CoCr:32,CSI:79.7,S247:78.14,PDC:37.1,XDept:47,FDA:41.1,OrgType:"Transitional",SP:421,JV:27,UniColl:24,TPA:56,EcoPtn:1274,CntryPerc:68.8,AnalystClarity:73.6,BrandPrem:53.7,GovCredit:13857,GeoPol:37.1,EmpEng:69.5,TrainHrs:57.5,NewProd:58,DigMat:59.7},
-  {y:2009,Rev:48000,NI:4541.15,TA:74973.35,RD:7146.65,RDPct:14.89,Pat:2256,FTR:64.2,Emp:88534,IntEmpPct:21.4,Cntrs:47,IntSales:55.5,EmgSales:53.02,DevSales:46.98,SvcRev:40.32,CustSol:232,CoCr:38,CSI:79.5,S247:91.24,PDC:36,XDept:65,FDA:50,OrgType:"Transitional",SP:528,JV:31,UniColl:27,TPA:45,EcoPtn:986,CntryPerc:75.8,AnalystClarity:76.7,BrandPrem:56,GovCredit:14008,GeoPol:42.1,EmpEng:63.9,TrainHrs:55.4,NewProd:69,DigMat:65.3},
-  {y:2010,Rev:55856.96,NI:5491.75,TA:91448.34,RD:7528.61,RDPct:13.48,Pat:2120,FTR:74.1,Emp:93292,IntEmpPct:24.18,Cntrs:55,IntSales:60.36,EmgSales:52.85,DevSales:47.15,SvcRev:42.19,CustSol:285,CoCr:47,CSI:84.1,S247:85.59,PDC:34.9,XDept:94,FDA:55.3,OrgType:"Transitional",SP:680,JV:40,UniColl:40,TPA:90,EcoPtn:1980,CntryPerc:74.9,AnalystClarity:75.3,BrandPrem:55.9,GovCredit:15345,GeoPol:48,EmpEng:67.5,TrainHrs:62.4,NewProd:75,DigMat:73.6},
-  {y:2011,Rev:65000,NI:6682.23,TA:99557.84,RD:10304.44,RDPct:15.85,Pat:2762,FTR:70.9,Emp:112219,IntEmpPct:25.71,Cntrs:67,IntSales:66.87,EmgSales:51.08,DevSales:48.92,SvcRev:46.03,CustSol:260,CoCr:61,CSI:85.9,S247:87.42,PDC:32.8,XDept:109,FDA:64.6,OrgType:"Decentralized",SP:790,JV:33,UniColl:73,TPA:108,EcoPtn:4233,CntryPerc:75.9,AnalystClarity:78.7,BrandPrem:64.4,GovCredit:14344,GeoPol:47.9,EmpEng:71.8,TrainHrs:72.2,NewProd:91,DigMat:79.1},
-  {y:2012,Rev:72391.07,NI:10805,TA:125072.31,RD:11613.8,RDPct:16.04,Pat:2887,FTR:73,Emp:123822,IntEmpPct:27.18,Cntrs:79,IntSales:61.49,EmgSales:50.24,DevSales:49.76,SvcRev:46.3,CustSol:290,CoCr:81,CSI:86.4,S247:90.94,PDC:31.3,XDept:134,FDA:70.9,OrgType:"Decentralized",SP:842,JV:36,UniColl:84,TPA:120,EcoPtn:6524,CntryPerc:82.9,AnalystClarity:84.6,BrandPrem:69.2,GovCredit:15501,GeoPol:54.5,EmpEng:74.4,TrainHrs:71.8,NewProd:102,DigMat:77.5},
-  {y:2013,Rev:80622.58,NI:9673.39,TA:142869.19,RD:12291,RDPct:15.25,Pat:4012,FTR:81.8,Emp:132202,IntEmpPct:28.65,Cntrs:91,IntSales:63.81,EmgSales:48.66,DevSales:51.34,SvcRev:47.24,CustSol:432,CoCr:75,CSI:89.6,S247:92.64,PDC:31.1,XDept:161,FDA:75.2,OrgType:"Decentralized",SP:868,JV:55,UniColl:95,TPA:146,EcoPtn:8972,CntryPerc:79.8,AnalystClarity:87,BrandPrem:75.9,GovCredit:15585,GeoPol:52.5,EmpEng:82.5,TrainHrs:78.4,NewProd:113,DigMat:81.7},
-  {y:2014,Rev:89790.08,NI:12185.57,TA:151740.24,RD:14441.72,RDPct:16.08,Pat:3902,FTR:94.7,Emp:143372,IntEmpPct:28.85,Cntrs:103,IntSales:64.3,EmgSales:46.09,DevSales:53.91,SvcRev:56.84,CustSol:359,CoCr:109,CSI:89.9,S247:94.69,PDC:26.3,XDept:180,FDA:80.3,OrgType:"Decentralized",SP:892,JV:42,UniColl:126,TPA:172,EcoPtn:9600,CntryPerc:79.4,AnalystClarity:84.7,BrandPrem:74.8,GovCredit:17452,GeoPol:60.2,EmpEng:84,TrainHrs:93,NewProd:124,DigMat:93.5},
-  {y:2015,Rev:100000,NI:13962.07,TA:208011.63,RD:14975.18,RDPct:14.98,Pat:4200,FTR:84.8,Emp:147440,IntEmpPct:36.4,Cntrs:115,IntSales:65.4,EmgSales:45.39,DevSales:54.61,SvcRev:58.39,CustSol:530,CoCr:116,CSI:87.1,S247:97.84,PDC:25.3,XDept:240,FDA:84.8,OrgType:"Decentralized",SP:1220,JV:55,UniColl:155,TPA:180,EcoPtn:12615,CntryPerc:82.6,AnalystClarity:87.1,BrandPrem:72.6,GovCredit:15336,GeoPol:64.6,EmpEng:84.3,TrainHrs:100.1,NewProd:135,DigMat:91.7},
-  {y:2016,Rev:105311.62,NI:11828.87,TA:184266.62,RD:17998.74,RDPct:17.09,Pat:6782,FTR:87.3,Emp:171856,IntEmpPct:36.97,Cntrs:127,IntSales:69.15,EmgSales:41.3,DevSales:58.7,SvcRev:51.86,CustSol:474,CoCr:119,CSI:88.8,S247:98,PDC:23.4,XDept:256,FDA:86.5,OrgType:"Decentralized",SP:2211,JV:65,UniColl:165,TPA:225,EcoPtn:13766,CntryPerc:81.1,AnalystClarity:86.4,BrandPrem:67.3,GovCredit:18180,GeoPol:59.2,EmpEng:79.9,TrainHrs:89.3,NewProd:139,DigMat:82},
-  {y:2017,Rev:110905.37,NI:15568.59,TA:188168.06,RD:18532.47,RDPct:16.71,Pat:9914,FTR:90,Emp:176713,IntEmpPct:37.57,Cntrs:139,IntSales:70.34,EmgSales:40.16,DevSales:59.84,SvcRev:52.5,CustSol:514,CoCr:130,CSI:89.4,S247:98,PDC:22.1,XDept:294,FDA:88.5,OrgType:"Decentralized",SP:3238,JV:72,UniColl:170,TPA:254,EcoPtn:18652,CntryPerc:82.3,AnalystClarity:88,BrandPrem:69.7,GovCredit:18588,GeoPol:62.9,EmpEng:80.8,TrainHrs:93.8,NewProd:164,DigMat:85.8},
-  {y:2018,Rev:116796.23,NI:13843.41,TA:219563.74,RD:17638.19,RDPct:15.1,Pat:11396,FTR:89.4,Emp:185304,IntEmpPct:38.92,Cntrs:151,IntSales:72.09,EmgSales:39.1,DevSales:60.9,SvcRev:53.12,CustSol:586,CoCr:154,CSI:90.6,S247:98,PDC:21,XDept:346,FDA:88.3,OrgType:"Decentralized",SP:4317,JV:75,UniColl:192,TPA:258,EcoPtn:21754,CntryPerc:83.4,AnalystClarity:89.9,BrandPrem:72.9,GovCredit:18819,GeoPol:66.5,EmpEng:82.6,TrainHrs:97.3,NewProd:177,DigMat:86.7},
-  {y:2019,Rev:123000,NI:13930.07,TA:196633.58,RD:18980.83,RDPct:15.43,Pat:13508,FTR:94.8,Emp:204382,IntEmpPct:40.94,Cntrs:163,IntSales:70.92,EmgSales:39.86,DevSales:60.14,SvcRev:55.21,CustSol:680,CoCr:176,CSI:90.2,S247:98,PDC:20,XDept:412,FDA:90.3,OrgType:"Decentralized",SP:5984,JV:88,UniColl:206,TPA:298,EcoPtn:26000,CntryPerc:86.6,AnalystClarity:90.5,BrandPrem:75.3,GovCredit:19054,GeoPol:69.8,EmpEng:85.6,TrainHrs:99,NewProd:208,DigMat:90.3},
-  {y:2020,Rev:136000,NI:21412.42,TA:280369.15,RD:20570.97,RDPct:15.13,Pat:17360,FTR:93.7,Emp:197385,IntEmpPct:42.24,Cntrs:175,IntSales:73,EmgSales:38.98,DevSales:61.02,SvcRev:57.69,CustSol:650,CoCr:220,CSI:93.6,S247:98,PDC:21.4,XDept:430,FDA:90.4,OrgType:"Decentralized",SP:5425,JV:105,UniColl:225,TPA:315,EcoPtn:26000,CntryPerc:85.9,AnalystClarity:92.3,BrandPrem:76.8,GovCredit:18758,GeoPol:75,EmpEng:86.1,TrainHrs:103.5,NewProd:240,DigMat:90.8}
+  {y:1987,Rev:0.0055,NI:-0,TA:0.01,RD:0,RDPct:0,Pat:11,FTR:13.6,Emp:1,IntEmpPct:1.68,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:8.36,CustSol:1,CoCr:0,CSI:52.6,S247:0,PDC:97.3,XDept:2,FDA:5[...]
+  {y:1988,Rev:0.03,NI:0,TA:0.06,RD:0,RDPct:0,Pat:21,FTR:5.1,Emp:416,IntEmpPct:1.35,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.79,CustSol:1,CoCr:0,CSI:53.1,S247:0,PDC:91.2,XDept:1,FDA:8.1[...]
+  {y:1989,Rev:0.18,NI:0,TA:0.31,RD:0.01,RDPct:5.56,Pat:24,FTR:10.1,Emp:795,IntEmpPct:1.47,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.27,CustSol:4,CoCr:0,CSI:48.5,S247:0,PDC:84.8,XDept:1,[...]
+  {y:1990,Rev:1,NI:0.01,TA:1.57,RD:0.05,RDPct:5,Pat:8,FTR:9.2,Emp:1492,IntEmpPct:0.42,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.48,CustSol:1,CoCr:0,CSI:49.6,S247:0,PDC:93.6,XDept:2,FDA:[...]
+  {y:1991,Rev:2.61,NI:-0.09,TA:5.17,RD:0.1,RDPct:3.83,Pat:9,FTR:7.2,Emp:1753,IntEmpPct:1.08,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:6.61,CustSol:4,CoCr:0,CSI:51.5,S247:0,PDC:94.8,XDept:[...]
+  {y:1992,Rev:6.79,NI:-0.23,TA:12.28,RD:0.44,RDPct:6.48,Pat:27,FTR:6.2,Emp:2216,IntEmpPct:1.39,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:9.24,CustSol:4,CoCr:0,CSI:45.5,S247:0,PDC:84.8,XDe[...]
+  {y:1993,Rev:17.68,NI:0.93,TA:28.03,RD:1.08,RDPct:6.11,Pat:11,FTR:8.4,Emp:2377,IntEmpPct:0.46,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:5.68,CustSol:4,CoCr:0,CSI:54.5,S247:0,PDC:87.6,XDe[...]
+  {y:1994,Rev:46.06,NI:3.9,TA:85.06,RD:3.77,RDPct:8.18,Pat:17,FTR:14.4,Emp:2962,IntEmpPct:0.35,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:8.54,CustSol:1,CoCr:0,CSI:53.9,S247:0,PDC:90.7,XDe[...]
+  {y:1995,Rev:120,NI:8.89,TA:182.89,RD:9.98,RDPct:8.32,Pat:19,FTR:8.2,Emp:3889,IntEmpPct:1.96,Cntrs:1,IntSales:0,EmgSales:100,DevSales:0,SvcRev:7.76,CustSol:3,CoCr:0,CSI:47.6,S247:0,PDC:89.9,XDep[...]
+  {y:1996,Rev:309.84,NI:24.27,TA:661.98,RD:19.28,RDPct:6.22,Pat:85,FTR:19,Emp:9349,IntEmpPct:3.01,Cntrs:1,IntSales:3.99,EmgSales:100,DevSales:0,SvcRev:11.8,CustSol:13,CoCr:0,CSI:57,S247:0,PDC:88.[...]
+  {y:1997,Rev:800,NI:40.66,TA:1344.92,RD:56.6,RDPct:7.08,Pat:106,FTR:23.8,Emp:12926,IntEmpPct:3.81,Cntrs:2,IntSales:4.7,EmgSales:96.86,DevSales:3.14,SvcRev:13.84,CustSol:23,CoCr:0,CSI:60.9,S247:0[...]
+  {y:1998,Rev:1214.64,NI:107.86,TA:2385.27,RD:114.95,RDPct:9.46,Pat:161,FTR:26.2,Emp:20116,IntEmpPct:5.6,Cntrs:3,IntSales:6.11,EmgSales:92.93,DevSales:7.07,SvcRev:15.27,CustSol:29,CoCr:0,CSI:62.5[...]
+  {y:1999,Rev:1844.17,NI:153.62,TA:3168.65,RD:229.64,RDPct:12.45,Pat:174,FTR:34.8,Emp:27176,IntEmpPct:6.74,Cntrs:4,IntSales:11.95,EmgSales:93.74,DevSales:6.26,SvcRev:18.45,CustSol:33,CoCr:0,CSI:6[...]
+  {y:2000,Rev:2800,NI:163.78,TA:5219.33,RD:321.81,RDPct:11.49,Pat:265,FTR:39.6,Emp:27295,IntEmpPct:7.12,Cntrs:5,IntSales:11.79,EmgSales:84.04,DevSales:15.96,SvcRev:17.91,CustSol:45,CoCr:0,CSI:68.[...]
+  {y:2001,Rev:5000,NI:286.36,TA:9413.49,RD:340,RDPct:6.8,Pat:206,FTR:36,Emp:19323,IntEmpPct:8.92,Cntrs:6,IntSales:25.87,EmgSales:85.3,DevSales:14.7,SvcRev:19.03,CustSol:59,CoCr:2,CSI:70.7,S247:26[...]
+  {y:2002,Rev:6708.2,NI:384.62,TA:10930.33,RD:692.53,RDPct:10.32,Pat:288,FTR:43,Emp:26988,IntEmpPct:8.13,Cntrs:8,IntSales:25.07,EmgSales:84.65,DevSales:15.35,SvcRev:24.9,CustSol:47,CoCr:8,CSI:75.[...]
+  {y:2003,Rev:9000,NI:559.53,TA:19608.38,RD:832.88,RDPct:9.25,Pat:346,FTR:43.8,Emp:41225,IntEmpPct:9.29,Cntrs:10,IntSales:29.79,EmgSales:73.63,DevSales:26.37,SvcRev:23.55,CustSol:69,CoCr:12,CSI:7[...]
+  {y:2004,Rev:12000,NI:1274.85,TA:24511.12,RD:1229.27,RDPct:10.24,Pat:320,FTR:47.1,Emp:47200,IntEmpPct:11.72,Cntrs:12,IntSales:37.54,EmgSales:70.5,DevSales:29.5,SvcRev:24.14,CustSol:59,CoCr:8,CSI[...]
+  {y:2005,Rev:16000,NI:1625.56,TA:34522.39,RD:1648.12,RDPct:10.3,Pat:410,FTR:45.7,Emp:58893,IntEmpPct:13.39,Cntrs:14,IntSales:39.74,EmgSales:65.19,DevSales:34.81,SvcRev:28.97,CustSol:75,CoCr:15,C[...]
+  {y:2006,Rev:22000,NI:2080.35,TA:46780.34,RD:3502.05,RDPct:15.92,Pat:793,FTR:54.2,Emp:46000,IntEmpPct:14.36,Cntrs:23,IntSales:43.96,EmgSales:64.02,DevSales:35.98,SvcRev:32.05,CustSol:126,CoCr:12[...]
+  {y:2007,Rev:29664.79,NI:3280.71,TA:56912.79,RD:4612.94,RDPct:15.55,Pat:1166,FTR:58,Emp:73014,IntEmpPct:15.81,Cntrs:31,IntSales:47.73,EmgSales:58.58,DevSales:41.42,SvcRev:35.77,CustSol:176,CoCr:[...]
+  {y:2008,Rev:40000,NI:3478.99,TA:85812.48,RD:6619.54,RDPct:16.55,Pat:1337,FTR:59.3,Emp:81000,IntEmpPct:19.16,Cntrs:39,IntSales:52,EmgSales:54.28,DevSales:45.72,SvcRev:36.08,CustSol:182,CoCr:32,C[...]
+  {y:2009,Rev:48000,NI:4541.15,TA:74973.35,RD:7146.65,RDPct:14.89,Pat:2256,FTR:64.2,Emp:88534,IntEmpPct:21.4,Cntrs:47,IntSales:55.5,EmgSales:53.02,DevSales:46.98,SvcRev:40.32,CustSol:232,CoCr:38,[...]
+  {y:2010,Rev:55856.96,NI:5491.75,TA:91448.34,RD:7528.61,RDPct:13.48,Pat:2120,FTR:74.1,Emp:93292,IntEmpPct:24.18,Cntrs:55,IntSales:60.36,EmgSales:52.85,DevSales:47.15,SvcRev:42.19,CustSol:285,CoC[...]
+  {y:2011,Rev:65000,NI:6682.23,TA:99557.84,RD:10304.44,RDPct:15.85,Pat:2762,FTR:70.9,Emp:112219,IntEmpPct:25.71,Cntrs:67,IntSales:66.87,EmgSales:51.08,DevSales:48.92,SvcRev:46.03,CustSol:260,CoCr[...]
+  {y:2012,Rev:72391.07,NI:10805,TA:125072.31,RD:11613.8,RDPct:16.04,Pat:2887,FTR:73,Emp:123822,IntEmpPct:27.18,Cntrs:79,IntSales:61.49,EmgSales:50.24,DevSales:49.76,SvcRev:46.3,CustSol:290,CoCr:8[...]
+  {y:2013,Rev:80622.58,NI:9673.39,TA:142869.19,RD:12291,RDPct:15.25,Pat:4012,FTR:81.8,Emp:132202,IntEmpPct:28.65,Cntrs:91,IntSales:63.81,EmgSales:48.66,DevSales:51.34,SvcRev:47.24,CustSol:432,CoC[...]
+  {y:2014,Rev:89790.08,NI:12185.57,TA:151740.24,RD:14441.72,RDPct:16.08,Pat:3902,FTR:94.7,Emp:143372,IntEmpPct:28.85,Cntrs:103,IntSales:64.3,EmgSales:46.09,DevSales:53.91,SvcRev:56.84,CustSol:359[...]
+  {y:2015,Rev:100000,NI:13962.07,TA:208011.63,RD:14975.18,RDPct:14.98,Pat:4200,FTR:84.8,Emp:147440,IntEmpPct:36.4,Cntrs:115,IntSales:65.4,EmgSales:45.39,DevSales:54.61,SvcRev:58.39,CustSol:530,Co[...]
+  {y:2016,Rev:105311.62,NI:11828.87,TA:184266.62,RD:17998.74,RDPct:17.09,Pat:6782,FTR:87.3,Emp:171856,IntEmpPct:36.97,Cntrs:127,IntSales:69.15,EmgSales:41.3,DevSales:58.7,SvcRev:51.86,CustSol:474[...]
+  {y:2017,Rev:110905.37,NI:15568.59,TA:188168.06,RD:18532.47,RDPct:16.71,Pat:9914,FTR:90,Emp:176713,IntEmpPct:37.57,Cntrs:139,IntSales:70.34,EmgSales:40.16,DevSales:59.84,SvcRev:52.5,CustSol:514,[...]
+  {y:2018,Rev:116796.23,NI:13843.41,TA:219563.74,RD:17638.19,RDPct:15.1,Pat:11396,FTR:89.4,Emp:185304,IntEmpPct:38.92,Cntrs:151,IntSales:72.09,EmgSales:39.1,DevSales:60.9,SvcRev:53.12,CustSol:586[...]
+  {y:2019,Rev:123000,NI:13930.07,TA:196633.58,RD:18980.83,RDPct:15.43,Pat:13508,FTR:94.8,Emp:204382,IntEmpPct:40.94,Cntrs:163,IntSales:70.92,EmgSales:39.86,DevSales:60.14,SvcRev:55.21,CustSol:680[...]
+  {y:2020,Rev:136000,NI:21412.42,TA:280369.15,RD:20570.97,RDPct:15.13,Pat:17360,FTR:93.7,Emp:197385,IntEmpPct:42.24,Cntrs:175,IntSales:73,EmgSales:38.98,DevSales:61.02,SvcRev:57.69,CustSol:650,Co[...]
 ];
 
 // ── TARGETS & META INFO ──────────────────────────────────────────────────────
@@ -375,7 +380,7 @@ function daiStatus(v) {
   return {label:"CRÍTICO",cls:"badge-red",text:"Alineamiento Bajo"};
 }
 
-// ── CHARTS INIT ──────────────────────────────────────────────────────────────
+// ── CHARTS INIT ────────────────────────────────────────────────────────────[...]
 const YEARS = RAW.map(r=>r.y);
 const COLORS = ["#1A4FAB","#007A87","#16803C","#D97706","#CF2020"];
 const DIM_NAMES = ["Estrategia","Innovación","Cliente","Agilidad","Ecosistema"];
@@ -397,7 +402,7 @@ function initCharts() {
       labels:DIM_NAMES,
       datasets:[{label:"DAI 2020",data:[97,95.6,93.3,92.1,92.7],backgroundColor:"rgba(26,79,171,0.15)",borderColor:"#1A4FAB",borderWidth:2,pointBackgroundColor:"#1A4FAB",pointRadius:4}]
     },
-    options:{scales:{r:{min:0,max:100,ticks:{stepSize:20,font:{size:10}},grid:{color:"#E2E8F0"},pointLabels:{font:{size:11,weight:"bold"}}}},plugins:{legend:{display:false}},animation:{duration:600}}
+    options:{scales:{r:{min:0,max:100,ticks:{stepSize:20,font:{size:10}},grid:{color:"#E2E8F0"},pointLabels:{font:{size:11,weight:"bold"}}}},plugins:{legend:{display:false}},animation:{duration:6[...]
   });
 
   // ── Dim Trend ──
@@ -423,7 +428,7 @@ function initCharts() {
         {label:"I+D % Ingresos",data:RAW.map(r=>r.RDPct),borderColor:"#D97706",backgroundColor:"transparent",type:"line",borderWidth:2,pointRadius:1,tension:.3,yAxisID:"y2"}
       ]
     },
-    options:{scales:{y:{ticks:{font:{size:10}},title:{display:true,text:"USD M",font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false},title:{display:true,text:"%",font:{size:10}}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},animation:{duration:400}}
+    options:{scales:{y:{ticks:{font:{size:10}},title:{display:true,text:"USD M",font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false},title:{display:true,text:[...]
   });
 
   // ── Cust Chart ──
@@ -437,7 +442,7 @@ function initCharts() {
         {label:"Sol. Personalizadas",data:RAW.map(r=>r.CustSol),borderColor:"#D97706",backgroundColor:"transparent",borderWidth:2,borderDash:[4,4],pointRadius:1,tension:.3,yAxisID:"y2"}
       ]
     },
-    options:{scales:{y:{min:0,max:110,ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},animation:{duration:400}}
+    options:{scales:{y:{min:0,max:110,ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend[...]
   });
 
   // ── Agile Chart ──
@@ -451,7 +456,7 @@ function initCharts() {
         {label:"Engagement (%)",data:RAW.map(r=>r.EmpEng),borderColor:"#16803C",backgroundColor:"transparent",borderWidth:2,borderDash:[4,4],pointRadius:1,tension:.3,yAxisID:"y"}
       ]
     },
-    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},animation:{duration:400}}
+    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font[...]
   });
 
   // ── Eco Chart ──
@@ -465,7 +470,7 @@ function initCharts() {
         {label:"Países con Presencia",data:RAW.map(r=>r.Cntrs),borderColor:"#16803C",backgroundColor:"transparent",borderWidth:2,borderDash:[4,4],pointRadius:1,tension:.3,yAxisID:"y2"}
       ]
     },
-    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},animation:{duration:400}}
+    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font[...]
   });
 
   // ── Pat & DigMat ──
@@ -479,7 +484,7 @@ function initCharts() {
         {label:"Frontier Tech",data:RAW.map(r=>r.FTR),borderColor:"#CF2020",backgroundColor:"transparent",borderWidth:2,borderDash:[4,4],pointRadius:1,tension:.3,yAxisID:"y2"}
       ]
     },
-    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",min:0,max:100,ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend:{labels:{font:{size:10},boxWidth:10}}},animation:{duration:400}}
+    options:{scales:{y:{ticks:{font:{size:10}}},y2:{position:"right",min:0,max:100,ticks:{font:{size:10}},grid:{drawOnChartArea:false}},x:{ticks:{maxTicksLimit:8,font:{size:10}}}},plugins:{legend[...]
   });
 }
 
@@ -534,7 +539,7 @@ function updateDashboard(idx) {
   renderSmartKPIs(d);
 }
 
-// ── OKR RENDERER ─────────────────────────────────────────────────────────────
+// ── OKR RENDERER ──────────────────────────────────────────────────────────[...]
 const OKR_DEFS = [
   {
     title:"O1 · Estrategia clara alineada con el mercado y entorno geopolítico",
@@ -646,7 +651,7 @@ function renderOKRs(d) {
   });
 }
 
-// ── SMART KPI ALERTS ─────────────────────────────────────────────────────────
+// ── SMART KPI ALERTS ────────────────────────────────────────────────────────[...]
 function renderSmartKPIs(d) {
   const container = document.getElementById("smartAlerts");
 
@@ -666,7 +671,7 @@ function renderSmartKPIs(d) {
       title:"Innovation Productivity Ratio",
       desc: () => {
         const ratio = d.Pat>0 && d.RDPct>0? (d.Pat/1000/(d.RDPct/15)).toFixed(2):"N/A";
-        return `I+D: ${d.RDPct}% | Patentes: ${d.Pat.toLocaleString()} | Prod. lanzados: ${d.NewProd}. Ratio innovación (normalizado): ${ratio}. ${d.RDPct>=15&&d.Pat>=15000?"Conversión de I+D en activos.":"Potencial mejora en conversión a productos."}`;
+        return `I+D: ${d.RDPct}% | Patentes: ${d.Pat.toLocaleString()} | Prod. lanzados: ${d.NewProd}. Ratio innovación (normalizado): ${ratio}. ${d.RDPct>=15&&d.Pat>=15000?"Conversión de I+D e[...]
       },
       action:"Reasignar presupuesto I+D hacia líneas con mayor conversión comercial.",
       state: () => (d.RDPct>=15 && d.Pat>=15000 && d.SvcRev>=50)?"green": (d.RDPct>=12)?"amber":"red"
@@ -675,7 +680,7 @@ function renderSmartKPIs(d) {
       title:"Customer Alignment Forecast",
       desc: () => {
         const drop = d.CoCr<150 && d.CustSol<500 && d.CSI>85;
-        return `CSI: ${d.CSI} pts | Co-creación: ${d.CoCr} proyectos | Sol. personalizadas: ${d.CustSol}. ${drop?"Riesgo: bajo co-creación puede erosionar satisfacción futura.":"Alineación cliente-servicio dentro de parámetros."}`;
+        return `CSI: ${d.CSI} pts | Co-creación: ${d.CoCr} proyectos | Sol. personalizadas: ${d.CustSol}. ${drop?"Riesgo: bajo co-creación puede erosionar satisfacción futura.":"Alineación cl[...]
       },
       action:"Aumentar laboratorios con clientes y reforzar feedback loops.",
       state: () => (d.CSI>=90 && d.CoCr>=150 && d.CustSol>=500)?"green": (d.CSI>=80)?"amber":"red"
@@ -684,7 +689,7 @@ function renderSmartKPIs(d) {
       title:"Agile Execution Risk",
       desc: () => {
         const risk = d.PDC>25 && (d.XDept<200 || d.EmpEng<75);
-        return `Ciclo dev: ${d.PDC} sem (meta ≤18) | X-Dept: ${d.XDept} | Engagement: ${d.EmpEng}%. ${risk?"RIESGO: ciclo largo con baja coordinación o engagement.":"Ejecución ágil dentro de rango aceptable."}`;
+        return `Ciclo dev: ${d.PDC} sem (meta ≤18) | X-Dept: ${d.XDept} | Engagement: ${d.EmpEng}%. ${risk?"RIESGO: ciclo largo con baja coordinación o engagement.":"Ejecución ágil dentro de[...]
       },
       action:"Eliminar cuellos de botella, crear squads multifuncionales.",
       state: () => (d.PDC<=22 && d.XDept>=300 && d.EmpEng>=80)?"green": (d.PDC<=30 && d.EmpEng>=70)?"amber":"red"
@@ -693,7 +698,7 @@ function renderSmartKPIs(d) {
       title:"Ecosystem Leverage Index",
       desc: () => {
         const leverage = d.EcoPtn>0? (d.NewProd/Math.max(1,d.EcoPtn/1000)).toFixed(2):"N/A";
-        return `Socios: ${d.EcoPtn.toLocaleString()} | Alianzas: ${d.SP} | Prod./1k socios: ${leverage}. ${d.EcoPtn>5000 && d.NewProd>50?"Ecosistema generando innovación productiva.":"Revisar actividad de socios pasivos."}`;
+        return `Socios: ${d.EcoPtn.toLocaleString()} | Alianzas: ${d.SP} | Prod./1k socios: ${leverage}. ${d.EcoPtn>5000 && d.NewProd>50?"Ecosistema generando innovación productiva.":"Revisar ac[...]
       },
       action:"Depurar alianzas pasivas, priorizar socios con contribución a patentes.",
       state: () => (d.EcoPtn>=10000 && d.SP>=1000)?"green": (d.EcoPtn>=1000)?"amber":"red"
@@ -704,7 +709,7 @@ function renderSmartKPIs(d) {
         const {dai} = calcDAI(d);
         const adjFactor = 1 - Math.max(0,(d.GeoPol-50)/200);
         const adjDai = (dai * adjFactor).toFixed(1);
-        return `DAI bruto: ${dai.toFixed(1)} | Factor riesgo geo (${d.GeoPol} pts): ${adjFactor.toFixed(2)} | DAI ajustado: ${adjDai}. ${d.GeoPol>65?"Riesgo geopolítico reduciendo alineamiento efectivo.":"Riesgo bajo, DAI ajustado cercano al bruto."}`;
+        return `DAI bruto: ${dai.toFixed(1)} | Factor riesgo geo (${d.GeoPol} pts): ${adjFactor.toFixed(2)} | DAI ajustado: ${adjDai}. ${d.GeoPol>65?"Riesgo geopolítico reduciendo alineamiento e[...]
       },
       action:"Crear escenarios por región y balancear expansión con resiliencia regulatoria.",
       state: () => {
@@ -715,7 +720,7 @@ function renderSmartKPIs(d) {
     {
       title:"Decentralization Effectiveness KPI",
       desc: () => {
-        return `Autoridad 1ª línea: ${d.FDA} pts | Ciclo dev: ${d.PDC} sem | CSI: ${d.CSI}. ${d.FDA>=80 && d.PDC<=25 && d.CSI>=85?"Descentralización generando velocidad y valor cliente.":"Revisar impacto de delegación en resultados."}`;
+        return `Autoridad 1ª línea: ${d.FDA} pts | Ciclo dev: ${d.PDC} sem | CSI: ${d.CSI}. ${d.FDA>=80 && d.PDC<=25 && d.CSI>=85?"Descentralización generando velocidad y valor cliente.":"Revi[...]
       },
       action:"Delegar decisiones donde haya evidencia de impacto positivo.",
       state: () => (d.FDA>=80 && d.PDC<=30 && d.CSI>=85)?"green": (d.FDA>=60)?"amber":"red"
@@ -724,7 +729,7 @@ function renderSmartKPIs(d) {
       title:"Co-Creation Conversion Rate",
       desc: () => {
         const convRate = d.CoCr>0? ((d.CustSol/Math.max(1,d.CoCr))*100).toFixed(1):"N/A";
-        return `Co-creación: ${d.CoCr} proyectos | Sol. personalizadas: ${d.CustSol} | Conversión: ${convRate}%. ${parseFloat(convRate)>200?"Alta conversión: cada proyecto genera múltiples soluciones.":"Conversión moderada."}`;
+        return `Co-creación: ${d.CoCr} proyectos | Sol. personalizadas: ${d.CustSol} | Conversión: ${convRate}%. ${parseFloat(convRate)>200?"Alta conversión: cada proyecto genera múltiples so[...]
       },
       action:"Cerrar proyectos de baja conversión, escalar los que generen soluciones repetibles.",
       state: () => {
@@ -748,7 +753,7 @@ function renderSmartKPIs(d) {
   });
 }
 
-// ── YEAR SLIDER ──────────────────────────────────────────────────────────────
+// ── YEAR SLIDER ──────────────────────────────────────────────────────────[...]
 const slider = document.getElementById("yearSlider");
 const yearLabel = document.getElementById("yearLabel");
 
@@ -758,7 +763,7 @@ slider.addEventListener("input", function() {
   updateDashboard(idx);
 });
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
+// ── INIT ────────────────────────────────────────────────────────────[...]
 window.addEventListener("load", ()=>{
   initCharts();
   updateDashboard(33); // start at 2020
